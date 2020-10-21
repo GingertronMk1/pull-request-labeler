@@ -62,54 +62,54 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, prop, prop;
+        var pullRequest, _a, issue_number_1, _b, owner_1, repo_1, repoToken, configPath, config, octokit_1, hr_1, br_1;
         return __generator(this, function (_c) {
             try {
                 pullRequest = github.context.payload.pull_request;
                 if (!pullRequest) {
                     throw new Error("No pull request information found");
                 }
-                _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                _a = github.context, issue_number_1 = _a.issue.number, _b = _a.repo, owner_1 = _b.owner, repo_1 = _b.repo;
                 repoToken = core.getInput("repo-token", { required: true });
                 configPath = core.getInput("configuration-path", {
                     required: true,
                 });
                 config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                octokit = github.getOctokit(repoToken);
+                octokit_1 = github.getOctokit(repoToken);
                 console.table(JSON.stringify(config));
-                hr = pullRequest.head.ref;
-                br = pullRequest.base.ref;
+                hr_1 = pullRequest.head.ref;
+                br_1 = pullRequest.base.ref;
                 console.table({
-                    headref: hr,
-                    baseref: br
+                    headref: hr_1,
+                    baseref: br_1
                 });
                 if (config.head) {
-                    for (prop in config.head) {
-                        console.table({
-                            headref: hr,
-                            prop: prop,
-                            chprop: (config.head)[prop]
-                        });
-                        if (prop === hr) {
-                            if (hr == prop) {
-                                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.head)[prop] });
+                    config.head.forEach(function (element) {
+                        for (var prop in element) {
+                            console.table({
+                                headref: hr_1,
+                                prop: prop,
+                                chprop: element[prop]
+                            });
+                            if (prop === hr_1) {
+                                octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element[prop] });
                             }
                         }
-                    }
+                    });
                 }
                 if (config.base) {
-                    for (prop in config.base) {
-                        console.table({
-                            baseref: hr,
-                            prop: prop,
-                            chprop: (config.base)[prop]
-                        });
-                        if (prop === br) {
-                            if (br == prop) {
-                                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.base)[prop] });
+                    config.base.forEach(function (element) {
+                        for (var prop in element) {
+                            console.table({
+                                baseref: br_1,
+                                prop: prop,
+                                chprop: element[prop]
+                            });
+                            if (prop === br_1) {
+                                octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element[prop] });
                             }
                         }
-                    }
+                    });
                 }
                 if (config.files) {
                     config.files.forEach(function (element, index) {

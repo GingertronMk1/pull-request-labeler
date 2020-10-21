@@ -40,33 +40,32 @@ async function run() {
       });
 
       if (config.head) {
-        for(const prop in config.head) {
-          console.table({
-            headref: hr,
-            prop: prop,
-            chprop: (config.head)[prop]
-          })
-          if(prop === hr) {
-            if(hr == prop) {
-              octokit.issues.addLabels({issue_number, owner, repo, labels: (config.head)[prop] })
+        config.head.forEach(element => {
+          for(const prop in element) {
+            console.table({
+              headref: hr,
+              prop: prop,
+              chprop: element[prop]
+            })
+            if(prop === hr) {
+              octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
             }
           }
-        }
+        });
       }
-
       if (config.base) {
-        for(const prop in config.base) {
-          console.table({
-            baseref: hr,
-            prop: prop,
-            chprop: (config.base)[prop]
-          })
-          if(prop === br) {
-            if(br == prop) {
-              octokit.issues.addLabels({issue_number, owner, repo, labels: (config.base)[prop] })
+        config.base.forEach(element => {
+          for(const prop in element) {
+            console.table({
+              baseref: br,
+              prop: prop,
+              chprop: element[prop]
+            })
+            if(prop === br) {
+              octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
             }
           }
-        }
+        });
       }
 
       if (config.files) {
