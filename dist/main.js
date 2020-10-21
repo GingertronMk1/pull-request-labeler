@@ -86,7 +86,8 @@ function run() {
                     config.head.forEach(function (element, index) {
                         console.table({
                             prhead: pullRequest_1.head.ref,
-                            comphead: index
+                            compindex: index,
+                            compelement: element
                         });
                         if (pullRequest_1.head.ref == index) {
                             octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
@@ -97,7 +98,8 @@ function run() {
                     config.base.forEach(function (element, index) {
                         console.table({
                             prbase: pullRequest_1.base.ref,
-                            comphead: index
+                            compindex: index,
+                            compelement: element
                         });
                         if (pullRequest_1.base.ref == index) {
                             octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });

@@ -42,8 +42,9 @@ async function run() {
         config.head.forEach((element, index) => {
           console.table({
             prhead: pullRequest.head.ref,
-            comphead: index
-          })
+            compindex: index,
+            compelement: element
+          });
           if(pullRequest.head.ref == index) {
             octokit.issues.addLabels({issue_number, owner, repo, labels: element })
           }
@@ -54,8 +55,9 @@ async function run() {
         config.base.forEach((element, index) => {
           console.table({
             prbase: pullRequest.base.ref,
-            comphead: index
-          })
+            compindex: index,
+            compelement: element
+          });
           if(pullRequest.base.ref == index) {
             octokit.issues.addLabels({issue_number, owner, repo, labels: element })
           }
