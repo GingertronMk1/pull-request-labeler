@@ -15,14 +15,14 @@ async function run() {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
     const syncLabels = !!core.getInput("sync-labels", { required: false });
-    const pr = github.context.payload.pull_request;
-    core.log(github.context.payload);
 
-    if (!pr) {
-      throw Error("Could not find pull request from context");
+    const prNumber = getPrNumber();
+    
+    if (!prNumber) {
+      console.log("Could not get pull request number from context, exiting");
+      return;
     }
 
-    const prNumber = pr.number;
 
     const octokit = github.getOctokit(token);
     const repo = octokit.context.repo;
@@ -55,6 +55,15 @@ async function run() {
     core.error(error);
     core.setFailed(error.message);
   }
+}
+
+function getPrNumber(): number | undefined {
+  const pullRequest = github.context.payload.pull_request;
+  if (!pullRequest) {
+    return undefined;
+  }
+
+  return pullRequest.number;
 }
 
 async function getChangedFiles(
