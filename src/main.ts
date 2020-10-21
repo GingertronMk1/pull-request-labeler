@@ -25,14 +25,13 @@ async function run() {
         required: true,
       });
 
-      // console.log(github.context.payload.pull_request);
+
 
       const config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
 
       const octokit = github.getOctokit(repoToken);
 
-      // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
-      // console.log(config);
+      console.table(JSON.stringify(config));
       const hr = pullRequest.head.ref;
       const br = pullRequest.base.ref;
       console.table({
@@ -41,7 +40,7 @@ async function run() {
       });
 
       if (config.head) {
-        for(const prop of config.head) {
+        for(const prop in config.head) {
           console.table({
             headref: hr,
             prop: prop,
@@ -56,7 +55,7 @@ async function run() {
       }
 
       if (config.base) {
-        for(const prop of config.base) {
+        for(const prop in config.base) {
           console.table({
             baseref: hr,
             prop: prop,
