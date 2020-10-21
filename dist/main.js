@@ -87,7 +87,7 @@ function run() {
                 octokit = github.getOctokit(token);
                 if (config.head) {
                     // apply labels based upon the name of the head branch
-                    octokit.client.addLabels(payload.user.name, payload.base.repo.name, prNumber, ['hello', 'world']);
+                    octokit.addLabels(payload.user.name, payload.base.repo.name, prNumber, ['hello', 'world']);
                 }
                 if (config.base) {
                     // apply labels based upon the name of the base branch

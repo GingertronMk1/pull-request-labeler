@@ -46,7 +46,7 @@ async function run() {
 
     if(config.head) {
       // apply labels based upon the name of the head branch
-      octokit.client.addLabels(
+      octokit.addLabels(
         payload.user.name,
         payload.base.repo.name,
         prNumber,
