@@ -75,14 +75,17 @@ function run() {
                     config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
                     octokit = github.getOctokit(repoToken);
                     octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
+                    console.log(config);
                     if (!config.head) return [3 /*break*/, 2];
                     // apply labels based upon the name of the head branch
+                    // console.log(config.head);
                     return [4 /*yield*/, octokit.issues.addLabels({
                             issue_number: issue_number, owner: owner, repo: repo,
                             labels: ["Wag", "warn"]
                         })];
                 case 1:
                     // apply labels based upon the name of the head branch
+                    // console.log(config.head);
                     _c.sent();
                     _c.label = 2;
                 case 2:
@@ -298,5 +301,4 @@ function removeLabels(client, prNumber, labels) {
 function JSONprint(json) {
     return console.log(JSON.stringify(json));
 }
-console.log("Running");
 run();

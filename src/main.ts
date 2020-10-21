@@ -25,10 +25,12 @@ async function run() {
       const octokit = github.getOctokit(repoToken);
 
       octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
+      console.log(config);
 
       //console.log(JSON.stringify(github.context.payload, undefined, 2));
       if (config.head) {
         // apply labels based upon the name of the head branch
+        // console.log(config.head);
         await octokit.issues.addLabels({
           issue_number, owner, repo, labels: ["Wag", "warn"]
         });
@@ -233,7 +235,5 @@ async function removeLabels(client, prNumber: number, labels: string[]) {
 function JSONprint(json: JSON) {
   return console.log(JSON.stringify(json));
 }
-
-console.log("Running");
 
 run();
