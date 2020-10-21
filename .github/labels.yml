@@ -1,6 +1,8 @@
 head:
   - testing:
     - testing
+  - enhancement:
+    - testing
 
 base:
   - master:
