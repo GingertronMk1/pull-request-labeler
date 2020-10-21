@@ -5,6 +5,3 @@ head:
 base:
   - master:
     - master
-
-enhancement:
-  - src/*
