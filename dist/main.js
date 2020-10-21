@@ -58,6 +58,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
 var yaml = __importStar(require("js-yaml"));
+var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
@@ -69,7 +70,7 @@ function run() {
                     required: true,
                 });
                 syncLabels = !!core.getInput("sync-labels", { required: false });
-                config = yaml.safeLoad(configPath);
+                config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
                 JSONprint(config);
                 pr = github.context.payload.pull_request;
                 if (!pr) {

@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
+import * as fs from "fs";
 import { Minimatch, IMinimatch } from "minimatch";
 
 interface MatchConfig {
@@ -18,7 +19,7 @@ async function run() {
       required: true,
     });
     const syncLabels = !!core.getInput("sync-labels", { required: false });
-    const config = yaml.safeLoad(configPath);
+    const config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
 
     JSONprint(config);
 
