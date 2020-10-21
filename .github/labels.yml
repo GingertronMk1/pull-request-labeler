@@ -1,10 +1,10 @@
 head:
-  - master:
-    - master
-
-base:
   - testing:
     - testing
+
+base:
+  - master:
+    - master
 
 enhancement:
   - src/*
