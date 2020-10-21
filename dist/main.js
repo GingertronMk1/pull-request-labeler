@@ -71,7 +71,7 @@ function run() {
                 });
                 syncLabels = !!core.getInput("sync-labels", { required: false });
                 config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
-                JSONprint(config);
+                console.log(config);
                 pr = github.context.payload.pull_request;
                 if (!pr) {
                     throw new Error("No pull request found");
