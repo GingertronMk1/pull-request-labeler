@@ -1,0 +1,23 @@
+{
+  "name": "pull-request-labeler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "check": "prettier --check **/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "js-yaml": "^3.14.0",
+    "minimatch": "^3.0.4",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
+  }
+}
