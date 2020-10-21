@@ -16,7 +16,7 @@ async function run() {
     const configPath = core.getInput("configuration-path", { required: true });
     const syncLabels = !!core.getInput("sync-labels", { required: false });
     const pr = github.context.payload.pull_request;
-    console.log(github.context.payload);
+    core.log(github.context.payload);
 
     if (!pr) {
       throw Error("Could not find pull request from context");
