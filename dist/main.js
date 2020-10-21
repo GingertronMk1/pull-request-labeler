@@ -62,47 +62,55 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, config, payload, pr, prNumber, octokit;
+        var token, configPath, syncLabels, config, payload, pr, prNumber, octokit, error_1;
         return __generator(this, function (_a) {
-            try {
-                token = core.getInput("repo-token", { required: true });
-                configPath = core.getInput("configuration-path", {
-                    required: true,
-                });
-                syncLabels = !!core.getInput("sync-labels", { required: false });
-                config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
-                payload = github.context.payload;
-                pr = payload.pull_request;
-                if (!pr) {
-                    throw new Error("No pull request found");
-                }
-                prNumber = pr.number;
-                if (!prNumber) {
-                    console.error("Could not get pull request number from context, exiting");
-                    return [2 /*return*/];
-                }
-                octokit = github.getOctokit(token);
-                if (config.head) {
-                    // apply labels based upon the name of the head branch
-                    octokit.issues.addLabels({
-                        owner: pr.user.name,
-                        repo: pr.base.repo.name,
-                        issue_number: prNumber,
-                        labels: ['hello', 'world']
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    token = core.getInput("repo-token", { required: true });
+                    configPath = core.getInput("configuration-path", {
+                        required: true,
                     });
-                }
-                if (config.base) {
-                    // apply labels based upon the name of the base branch
-                }
-                if (config.files) {
-                    // apply labels based upon the files in question
-                }
+                    syncLabels = !!core.getInput("sync-labels", { required: false });
+                    config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
+                    payload = github.context.payload;
+                    pr = payload.pull_request;
+                    if (!pr) {
+                        throw new Error("No pull request found");
+                    }
+                    prNumber = pr.number;
+                    if (!prNumber) {
+                        console.error("Could not get pull request number from context, exiting");
+                        return [2 /*return*/];
+                    }
+                    octokit = github.getOctokit(token);
+                    if (!config.head) return [3 /*break*/, 2];
+                    // apply labels based upon the name of the head branch
+                    return [4 /*yield*/, octokit.issues.addLabels({
+                            owner: pr.user.name,
+                            repo: pr.base.repo.name,
+                            issue_number: prNumber,
+                            labels: ['hello', 'world']
+                        })];
+                case 1:
+                    // apply labels based upon the name of the head branch
+                    _a.sent();
+                    _a.label = 2;
+                case 2:
+                    if (config.base) {
+                        // apply labels based upon the name of the base branch
+                    }
+                    if (config.files) {
+                        // apply labels based upon the files in question
+                    }
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    core.error(error_1);
+                    core.setFailed(error_1.message);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
-            catch (error) {
-                core.error(error);
-                core.setFailed(error.message);
-            }
-            return [2 /*return*/];
         });
     });
 }

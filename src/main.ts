@@ -45,7 +45,7 @@ async function run() {
 
     if(config.head) {
       // apply labels based upon the name of the head branch
-      octokit.issues.addLabels({
+      await octokit.issues.addLabels({
         owner: pr.user.name,
         repo: pr.base.repo.name,
         issue_number: prNumber,
