@@ -12,48 +12,49 @@ type StringOrMatchConfig = string | MatchConfig;
 
 async function run() {
   try {
-    if (1) {
-      console.log(JSON.stringify(github.context.payload, undefined, 2));
-    } else {
-      const token = core.getInput("repo-token", { required: true });
-      const configPath = core.getInput("configuration-path", {
-        required: true,
-      });
-      const syncLabels = !!core.getInput("sync-labels", { required: false });
+    console.log(JSON.stringify(github.context.payload, undefined, 2));
+    const token = core.getInput("repo-token", { required: true });
+    const configPath = core.getInput("configuration-path", {
+      required: true,
+    });
+    const syncLabels = !!core.getInput("sync-labels", { required: false });
 
-      const prNumber = getPrNumber();
+    const pr = github.context.payload.pull_request;
 
-      if (!prNumber) {
-        console.log(github.context.payload);
-        console.error(
-          "Could not get pull request number from context, exiting"
-        );
-        return;
-      }
-
-      const octokit = github.getOctokit(token);
-
-      // console.log(octokit);
-
-      const repo = octokit.context.repo;
-      const { data: pullRequest } = await octokit.pulls.get({
-        owner: repo.owner,
-        repo: repo.repo,
-        pull_number: prNumber,
-      });
-
-      core.debug("Getting changed files for PR #${prNumber}");
-
-      const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
-
-      const labelGlobs: Map<
-        string,
-        StringOrMatchConfig[]
-      > = await getLabelGlobs(octokit, configPath);
-
-      const labels: string[] = [];
-      const labelsToRemove: string[] = [];
+    if (!pr) {
+      throw new Error("No pull request found");
     }
+
+    const prNumber = pr.number;
+
+    if (!prNumber) {
+      console.log(github.context.payload);
+      console.error("Could not get pull request number from context, exiting");
+      return;
+    }
+
+    const octokit = github.getOctokit(token);
+
+    // console.log(octokit);
+
+    const repo = octokit.context.repo;
+    const { data: pullRequest } = await octokit.pulls.get({
+      owner: repo.owner,
+      repo: repo.repo,
+      pull_number: prNumber,
+    });
+
+    core.debug("Getting changed files for PR #${prNumber}");
+
+    const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
+
+    const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
+      octokit,
+      configPath
+    );
+
+    const labels: string[] = [];
+    const labelsToRemove: string[] = [];
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
