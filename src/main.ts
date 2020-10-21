@@ -46,10 +46,10 @@ async function run() {
 async function addBranchLabels(
   yamlArray: object[],
   comp: string,
-  octokit,
-  issue_number,
-  owner,
-  repo
+  octokit,//: object,
+  issue_number: number,
+  owner: string,
+  repo: string
 ) {
   if(yamlArray) {                                 // If the array exists
     yamlArray.forEach(element => {                // Iterate through it

@@ -106,7 +106,8 @@ function run() {
         });
     });
 }
-function addBranchLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
+function addBranchLabels(yamlArray, comp, octokit, //: object,
+issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (yamlArray) { // If the array exists
