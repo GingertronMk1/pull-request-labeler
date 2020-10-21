@@ -5,3 +5,6 @@ head:
 base:
   - testing:
     - testing
+
+label1:
+  - src/*
