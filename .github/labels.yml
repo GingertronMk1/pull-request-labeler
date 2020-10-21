@@ -1,3 +1,7 @@
 head:
-  master:
+  - master:
     - master
+
+base:
+  - testing:
+    - testing
