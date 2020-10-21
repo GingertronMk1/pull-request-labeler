@@ -62,8 +62,8 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, prop, prop;
-        return __generator(this, function (_c) {
+        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, _i, _c, prop, _d, _e, prop;
+        return __generator(this, function (_f) {
             try {
                 pullRequest = github.context.payload.pull_request;
                 if (!pullRequest) {
@@ -83,7 +83,8 @@ function run() {
                     baseref: br
                 });
                 if (config.head) {
-                    for (prop in config.head) {
+                    for (_i = 0, _c = config.head; _i < _c.length; _i++) {
+                        prop = _c[_i];
                         console.table({
                             headref: hr,
                             prop: prop,
@@ -97,7 +98,8 @@ function run() {
                     }
                 }
                 if (config.base) {
-                    for (prop in config.base) {
+                    for (_d = 0, _e = config.base; _d < _e.length; _d++) {
+                        prop = _e[_d];
                         console.table({
                             baseref: hr,
                             prop: prop,

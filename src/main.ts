@@ -41,7 +41,7 @@ async function run() {
       });
 
       if (config.head) {
-        for(const prop in config.head) {
+        for(const prop of config.head) {
           console.table({
             headref: hr,
             prop: prop,
@@ -56,7 +56,7 @@ async function run() {
       }
 
       if (config.base) {
-        for(const prop in config.base) {
+        for(const prop of config.base) {
           console.table({
             baseref: hr,
             prop: prop,
