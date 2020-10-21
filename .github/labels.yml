@@ -1,3 +1,9 @@
 head:
-  master:
+  - testing:
+    - testing
+  - enhancement:
+    - testing
+
+base:
+  - master:
     - master

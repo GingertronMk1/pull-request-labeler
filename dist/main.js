@@ -57,37 +57,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
+var yaml = __importStar(require("js-yaml"));
+var fs = __importStar(require("fs"));
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, pr, prNumber, octokit, repo, pullRequest, changedFiles, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    token = core.getInput("repo-token", { required: true });
-                    configPath = core.getInput("configuration-path", { required: true });
-                    syncLabels = !!core.getInput("sync-labels", { required: false });
-                    pr = github.context.payload.pull_request;
-                    if (!pr) {
-                        throw Error("Could not find pull request from context");
+                    _c.trys.push([0, 3, , 4]);
+                    pullRequest = github.context.payload.pull_request;
+                    if (!pullRequest) {
+                        throw new Error("No pull request information found");
                     }
-                    prNumber = pr.number;
-                    octokit = github.getOctokit(token);
-                    repo = octokit.context.repo;
-                    return [4 /*yield*/, octokit.pulls.get({
-                            owner: repo.owner,
-                            repo: repo.repo,
-                            pull_number: prNumber
-                        })];
+                    _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                    repoToken = core.getInput("repo-token", { required: true });
+                    configPath = core.getInput("configuration-path", {
+                        required: true,
+                    });
+                    config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
+                    octokit = github.getOctokit(repoToken);
+                    console.table(JSON.stringify(config));
+                    hr = pullRequest.head.ref;
+                    br = pullRequest.base.ref;
+                    console.table({
+                        headref: hr,
+                        baseref: br
+                    });
+                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 1:
-                    pullRequest = (_a.sent()).data;
-                    core.debug('Getting changed files for PR #${prNumber}');
-                    return [4 /*yield*/, getChangedFiles(octokit, prNumber)];
+                    _c.sent();
+                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
-                    changedFiles = _a.sent();
+                    _c.sent();
+                    if (config.files) {
+                        // this will be more difficult
+                        config.files.forEach(function (element, index) {
+                        });
+                    }
                     return [3 /*break*/, 4];
                 case 3:
-                    error_1 = _a.sent();
+                    error_1 = _c.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
                     return [3 /*break*/, 4];
@@ -96,28 +106,20 @@ function run() {
         });
     });
 }
-function getChangedFiles(client, prNumber) {
+function addBranchLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
-        var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    listFilesOptions = client.pulls.listFiles.endpoint.merge({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
-                        pull_number: prNumber
-                    });
-                    return [4 /*yield*/, client.paginate(listFilesOptions)];
-                case 1:
-                    listFilesResponse = _a.sent();
-                    changedFiles = listFilesResponse.map(function (f) { return f.filename; });
-                    core.debug("found changed files:");
-                    for (_i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
-                        file = changedFiles_1[_i];
-                        core.debug("  " + file);
+            if (yamlArray) { // If the array exists
+                yamlArray.forEach(function (element) {
+                    for (var prop in element) { // It'll be an array of objects so iterate through that
+                        if (element[prop].includes(comp)) { // If the attribute label equals comp string
+                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: [prop] }); // Add labels
+                        }
                     }
-                    return [2 /*return*/, changedFiles];
+                });
             }
+            return [2 /*return*/];
         });
     });
 }
+run();
