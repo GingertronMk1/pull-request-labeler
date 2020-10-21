@@ -76,18 +76,15 @@ function run() {
                 if (!pr) {
                     throw new Error("No pull request found");
                 }
-                console.log(pr);
-                console.log(config);
                 prNumber = pr.number;
                 if (!prNumber) {
-                    console.log(github.context.payload);
                     console.error("Could not get pull request number from context, exiting");
                     return [2 /*return*/];
                 }
                 octokit = github.getOctokit(token);
                 if (config.head) {
                     // apply labels based upon the name of the head branch
-                    octokit.addLabels(payload.user.name, payload.base.repo.name, prNumber, ['hello', 'world']);
+                    octokit.addLabels(pr.user.name, pr.base.repo.name, prNumber, ['hello', 'world']);
                 }
                 if (config.base) {
                     // apply labels based upon the name of the base branch

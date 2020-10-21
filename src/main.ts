@@ -31,13 +31,12 @@ async function run() {
       throw new Error("No pull request found");
     }
 
-    console.log(pr)
-    console.log(config);
+    // console.log(pr)
+    // console.log(config);
 
     const prNumber = pr.number;
 
     if (!prNumber) {
-      console.log(github.context.payload);
       console.error("Could not get pull request number from context, exiting");
       return;
     }
@@ -47,8 +46,8 @@ async function run() {
     if(config.head) {
       // apply labels based upon the name of the head branch
       octokit.addLabels(
-        payload.user.name,
-        payload.base.repo.name,
+        pr.user.name,
+        pr.base.repo.name,
         prNumber,
         ['hello', 'world']
       )
