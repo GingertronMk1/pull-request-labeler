@@ -33,15 +33,22 @@ async function run() {
 
       // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
       // console.log(config);
+      const hr = pullRequest.head.ref;
+      const br = pullRequest.base.ref;
       console.table({
-        headref: pullRequest.head.ref,
-        baseref: pullRequest.base.ref
+        headref: hr,
+        baseref: br
       });
 
       if (config.head) {
         for(const prop in config.head) {
-          if(prop === pullRequest.head.ref) {
-            if(pullRequest.head.ref == prop) {
+          console.table({
+            headref: hr,
+            prop: prop,
+            chprop: (config.head)[prop]
+          })
+          if(prop === hr) {
+            if(hr == prop) {
               octokit.issues.addLabels({issue_number, owner, repo, labels: (config.head)[prop] })
             }
           }
@@ -50,8 +57,13 @@ async function run() {
 
       if (config.base) {
         for(const prop in config.base) {
-          if(prop === pullRequest.base.ref) {
-            if(pullRequest.base.ref == prop) {
+          console.table({
+            baseref: hr,
+            prop: prop,
+            chprop: (config.base)[prop]
+          })
+          if(prop === br) {
+            if(br == prop) {
               octokit.issues.addLabels({issue_number, owner, repo, labels: (config.base)[prop] })
             }
           }

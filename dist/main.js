@@ -62,7 +62,7 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, prop, prop;
+        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, prop, prop;
         return __generator(this, function (_c) {
             try {
                 pullRequest = github.context.payload.pull_request;
@@ -76,16 +76,21 @@ function run() {
                 });
                 config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
                 octokit = github.getOctokit(repoToken);
-                // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
-                // console.log(config);
+                hr = pullRequest.head.ref;
+                br = pullRequest.base.ref;
                 console.table({
-                    headref: pullRequest.head.ref,
-                    baseref: pullRequest.base.ref
+                    headref: hr,
+                    baseref: br
                 });
                 if (config.head) {
                     for (prop in config.head) {
-                        if (prop === pullRequest.head.ref) {
-                            if (pullRequest.head.ref == prop) {
+                        console.table({
+                            headref: hr,
+                            prop: prop,
+                            chprop: (config.head)[prop]
+                        });
+                        if (prop === hr) {
+                            if (hr == prop) {
                                 octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.head)[prop] });
                             }
                         }
@@ -93,8 +98,13 @@ function run() {
                 }
                 if (config.base) {
                     for (prop in config.base) {
-                        if (prop === pullRequest.base.ref) {
-                            if (pullRequest.base.ref == prop) {
+                        console.table({
+                            baseref: hr,
+                            prop: prop,
+                            chprop: (config.base)[prop]
+                        });
+                        if (prop === br) {
+                            if (br == prop) {
                                 octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.base)[prop] });
                             }
                         }
