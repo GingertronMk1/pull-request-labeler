@@ -59,265 +59,127 @@ var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
 var yaml = __importStar(require("js-yaml"));
 var fs = __importStar(require("fs"));
-var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number_1, _b, owner_1, repo_1, repoToken, configPath, config, octokit_1, hr_1, br_1;
+        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
         return __generator(this, function (_c) {
-            try {
-                pullRequest = github.context.payload.pull_request;
-                if (!pullRequest) {
-                    throw new Error("No pull request information found");
-                }
-                _a = github.context, issue_number_1 = _a.issue.number, _b = _a.repo, owner_1 = _b.owner, repo_1 = _b.repo;
-                repoToken = core.getInput("repo-token", { required: true });
-                configPath = core.getInput("configuration-path", {
-                    required: true,
-                });
-                config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                octokit_1 = github.getOctokit(repoToken);
-                console.table(JSON.stringify(config));
-                hr_1 = pullRequest.head.ref;
-                br_1 = pullRequest.base.ref;
-                console.table({
-                    headref: hr_1,
-                    baseref: br_1
-                });
-                if (config.head) {
-                    config.head.forEach(function (element) {
-                        for (var prop in element) {
-                            console.table({
-                                headref: hr_1,
-                                prop: prop,
-                                chprop: element[prop]
-                            });
-                            if (prop === hr_1) {
-                                octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element[prop] });
-                            }
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 3, , 4]);
+                    pullRequest = github.context.payload.pull_request;
+                    if (!pullRequest) {
+                        throw new Error("No pull request information found");
+                    }
+                    _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                    repoToken = core.getInput("repo-token", { required: true });
+                    configPath = core.getInput("configuration-path", {
+                        required: true,
+                    });
+                    config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
+                    octokit = github.getOctokit(repoToken);
+                    console.table(JSON.stringify(config));
+                    hr = pullRequest.head.ref;
+                    br = pullRequest.base.ref;
+                    console.table({
+                        headref: hr,
+                        baseref: br
+                    });
+                    /*
+                    if (config.head) {
+                      config.head.forEach(element => {
+                        for(const prop in element) {
+                          console.table({
+                            headref: hr,
+                            prop: prop,
+                            chprop: element[prop]
+                          })
+                          if(prop === hr) {
+                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
+                          }
                         }
-                    });
-                }
-                if (config.base) {
-                    config.base.forEach(function (element) {
-                        for (var prop in element) {
-                            console.table({
-                                baseref: br_1,
-                                prop: prop,
-                                chprop: element[prop]
-                            });
-                            if (prop === br_1) {
-                                octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element[prop] });
-                            }
+                      });
+                    }
+                    if (config.base) {
+                      config.base.forEach(element => {
+                        for(const prop in element) {
+                          console.table({
+                            baseref: br,
+                            prop: prop,
+                            chprop: element[prop]
+                          })
+                          if(prop === br) {
+                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
+                          }
                         }
-                    });
-                }
-                if (config.files) {
-                    config.files.forEach(function (element, index) {
-                        // console.log(index, '=>', element);
-                    });
-                }
+                      });
+                    }
+                    */
+                    return [4 /*yield*/, addLabels(config.head, hr, octokit, issue_number, owner, repo)];
+                case 1:
+                    /*
+                    if (config.head) {
+                      config.head.forEach(element => {
+                        for(const prop in element) {
+                          console.table({
+                            headref: hr,
+                            prop: prop,
+                            chprop: element[prop]
+                          })
+                          if(prop === hr) {
+                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
+                          }
+                        }
+                      });
+                    }
+                    if (config.base) {
+                      config.base.forEach(element => {
+                        for(const prop in element) {
+                          console.table({
+                            baseref: br,
+                            prop: prop,
+                            chprop: element[prop]
+                          })
+                          if(prop === br) {
+                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
+                          }
+                        }
+                      });
+                    }
+                    */
+                    _c.sent();
+                    return [4 /*yield*/, addLabels(config.base, br, octokit, issue_number, owner, repo)];
+                case 2:
+                    _c.sent();
+                    if (config.files) {
+                        // this will be more difficult
+                        config.files.forEach(function (element, index) {
+                        });
+                    }
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _c.sent();
+                    core.error(error_1);
+                    core.setFailed(error_1.message);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
-            catch (error) {
-                core.error(error);
-                core.setFailed(error.message);
+        });
+    });
+}
+function addLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (yamlArray) {
+                yamlArray.forEach(function (element) {
+                    for (var prop in element) {
+                        if (prop === comp) {
+                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: element[prop] });
+                        }
+                    }
+                });
             }
             return [2 /*return*/];
         });
     });
-}
-function getPrNumber() {
-    var pullRequest = github.context.payload.pull_request;
-    if (!pullRequest) {
-        return undefined;
-    }
-    return pullRequest.number;
-}
-function getChangedFiles(client, prNumber) {
-    return __awaiter(this, void 0, void 0, function () {
-        var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    listFilesOptions = client.pulls.listFiles.endpoint.merge({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
-                        pull_number: prNumber,
-                    });
-                    return [4 /*yield*/, client.paginate(listFilesOptions)];
-                case 1:
-                    listFilesResponse = _a.sent();
-                    changedFiles = listFilesResponse.map(function (f) { return f.filename; });
-                    core.debug("found changed files:");
-                    for (_i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
-                        file = changedFiles_1[_i];
-                        core.debug("  " + file);
-                    }
-                    return [2 /*return*/, changedFiles];
-            }
-        });
-    });
-}
-function getLabelGlobs(client, configurationPath) {
-    return __awaiter(this, void 0, void 0, function () {
-        var configurationContent, configObject;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetchContent(client, configurationPath)];
-                case 1:
-                    configurationContent = _a.sent();
-                    configObject = yaml.safeLoad(configurationContent);
-                    // transform `any` => `Map<string,StringOrMatchConfig[]>` or throw if yaml is malformed:
-                    return [2 /*return*/, getLabelGlobMapFromObject(configObject)];
-            }
-        });
-    });
-}
-function fetchContent(client, repoPath) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, client.repos.getContents({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
-                        path: repoPath,
-                        ref: github.context.sha,
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, Buffer.from(response.data.content, response.data.encoding).toString()];
-            }
-        });
-    });
-}
-function getLabelGlobMapFromObject(configObject) {
-    var labelGlobs = new Map();
-    for (var label in configObject) {
-        if (typeof configObject[label] === "string") {
-            labelGlobs.set(label, [configObject[label]]);
-        }
-        else if (configObject[label] instanceof Array) {
-            labelGlobs.set(label, configObject[label]);
-        }
-        else {
-            throw Error("found unexpected type for label " + label + " (should be string or array of globs)");
-        }
-    }
-    return labelGlobs;
-}
-function toMatchConfig(config) {
-    if (typeof config === "string") {
-        return {
-            any: [config],
-        };
-    }
-    return config;
-}
-function printPattern(matcher) {
-    return (matcher.negate ? "!" : "") + matcher.pattern;
-}
-function checkGlobs(changedFiles, globs) {
-    for (var _i = 0, globs_1 = globs; _i < globs_1.length; _i++) {
-        var glob = globs_1[_i];
-        core.debug(" checking pattern " + JSON.stringify(glob));
-        var matchConfig = toMatchConfig(glob);
-        if (checkMatch(changedFiles, matchConfig)) {
-            return true;
-        }
-    }
-    return false;
-}
-function isMatch(changedFile, matchers) {
-    core.debug("    matching patterns against file " + changedFile);
-    for (var _i = 0, matchers_1 = matchers; _i < matchers_1.length; _i++) {
-        var matcher = matchers_1[_i];
-        core.debug("   - " + printPattern(matcher));
-        if (!matcher.match(changedFile)) {
-            core.debug("   " + printPattern(matcher) + " did not match");
-            return false;
-        }
-    }
-    core.debug("   all patterns matched");
-    return true;
-}
-// equivalent to "Array.some()" but expanded for debugging and clarity
-function checkAny(changedFiles, globs) {
-    var matchers = globs.map(function (g) { return new minimatch_1.Minimatch(g); });
-    core.debug("  checking \"any\" patterns");
-    for (var _i = 0, changedFiles_2 = changedFiles; _i < changedFiles_2.length; _i++) {
-        var changedFile = changedFiles_2[_i];
-        if (isMatch(changedFile, matchers)) {
-            core.debug("  \"any\" patterns matched against " + changedFile);
-            return true;
-        }
-    }
-    core.debug("  \"any\" patterns did not match any files");
-    return false;
-}
-// equivalent to "Array.every()" but expanded for debugging and clarity
-function checkAll(changedFiles, globs) {
-    var matchers = globs.map(function (g) { return new minimatch_1.Minimatch(g); });
-    core.debug(" checking \"all\" patterns");
-    for (var _i = 0, changedFiles_3 = changedFiles; _i < changedFiles_3.length; _i++) {
-        var changedFile = changedFiles_3[_i];
-        if (!isMatch(changedFile, matchers)) {
-            core.debug("  \"all\" patterns did not match against " + changedFile);
-            return false;
-        }
-    }
-    core.debug("  \"all\" patterns matched all files");
-    return true;
-}
-function checkMatch(changedFiles, matchConfig) {
-    if (matchConfig.all !== undefined) {
-        if (!checkAll(changedFiles, matchConfig.all)) {
-            return false;
-        }
-    }
-    if (matchConfig.any !== undefined) {
-        if (!checkAny(changedFiles, matchConfig.any)) {
-            return false;
-        }
-    }
-    return true;
-}
-function addLabels(client, prNumber, labels) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, client.issues.addLabels({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
-                        issue_number: prNumber,
-                        labels: labels,
-                    })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function removeLabels(client, prNumber, labels) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, Promise.all(labels.map(function (label) {
-                        return client.issues.removeLabel({
-                            owner: github.context.repo.owner,
-                            repo: github.context.repo.repo,
-                            issue_number: prNumber,
-                            name: label,
-                        });
-                    }))];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function JSONprint(json) {
-    return console.log(JSON.stringify(json));
 }
 run();
