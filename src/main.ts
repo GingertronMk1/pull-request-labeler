@@ -3,7 +3,7 @@ import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import { Minimatch, IMinimatch } from "minimatch";
-import { GitHub } from "@actions/github/lib/utils";
+import { getOctokitOptions, GitHub } from "@actions/github/lib/utils";
 
 interface MatchConfig {
   all?: string[];
@@ -45,12 +45,12 @@ async function run() {
 
     if(config.head) {
       // apply labels based upon the name of the head branch
-      octokit.addLabels(
-        pr.user.name,
-        pr.base.repo.name,
-        prNumber,
-        ['hello', 'world']
-      )
+      octokit.issues.addLabels({
+        owner: pr.user.name,
+        repo: pr.base.repo.name,
+        issue_number: prNumber,
+        labels: ['hello', 'world']
+      })
     }
 
     if(config.base) {

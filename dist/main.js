@@ -84,7 +84,12 @@ function run() {
                 octokit = github.getOctokit(token);
                 if (config.head) {
                     // apply labels based upon the name of the head branch
-                    octokit.addLabels(pr.user.name, pr.base.repo.name, prNumber, ['hello', 'world']);
+                    octokit.issues.addLabels({
+                        owner: pr.user.name,
+                        repo: pr.base.repo.name,
+                        issue_number: prNumber,
+                        labels: ['hello', 'world']
+                    });
                 }
                 if (config.base) {
                     // apply labels based upon the name of the base branch
