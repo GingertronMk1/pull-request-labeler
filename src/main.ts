@@ -52,7 +52,7 @@ async function addBranchLabels(
   repo: string
 ) {
   if(yamlArray) {                                 // If the array exists
-  console.log(typeof octokit);
+  console.log(octokit.type);
     yamlArray.forEach(element => {                // Iterate through it
       for(const label in element) {                // It'll be an array of objects so iterate through that
         if(element[label].includes(comp)) {        // If the attribute label equals comp string
