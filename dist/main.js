@@ -78,20 +78,29 @@ function run() {
                 octokit_1 = github.getOctokit(repoToken);
                 // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
                 // console.log(config);
-                console.table({ headref: pullRequest_1.head.ref, baseref: pullRequest_1.base.ref });
+                console.table({
+                    headref: pullRequest_1.head.ref,
+                    baseref: pullRequest_1.base.ref
+                });
                 if (config.head) {
                     config.head.forEach(function (element, index) {
+                        console.table({
+                            prhead: pullRequest_1.head.ref,
+                            comphead: index
+                        });
                         if (pullRequest_1.head.ref == index) {
                             octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
-                            console.log('valid index:', index);
                         }
                     });
                 }
                 if (config.base) {
                     config.base.forEach(function (element, index) {
+                        console.table({
+                            prbase: pullRequest_1.base.ref,
+                            comphead: index
+                        });
                         if (pullRequest_1.base.ref == index) {
                             octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
-                            console.log('valid index:', index);
                         }
                     });
                 }
