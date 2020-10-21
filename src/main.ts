@@ -244,5 +244,7 @@ async function getLabelGlobs(
     );
   }
   
+  console.log("Running");
+
   run();
   
