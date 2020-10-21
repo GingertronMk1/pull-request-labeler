@@ -19,7 +19,7 @@ async function run() {
     const prNumber = getPrNumber();
     
     if (!prNumber) {
-      console.log(github.context);
+      console.log(github.context.payload);
       console.error("Could not get pull request number from context, exiting");
       return;
     }
@@ -27,7 +27,7 @@ async function run() {
 
     const octokit = github.getOctokit(token);
 
-    console.log(octokit);
+    // console.log(octokit);
 
     const repo = octokit.context.repo;
     const { data: pullRequest } = await octokit.pulls.get({
