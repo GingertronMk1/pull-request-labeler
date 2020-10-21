@@ -71,7 +71,8 @@ function run() {
                     syncLabels = !!core.getInput("sync-labels", { required: false });
                     prNumber = getPrNumber();
                     if (!prNumber) {
-                        console.log("Could not get pull request number from context, exiting");
+                        console.log(github.context);
+                        console.error("Could not get pull request number from context, exiting");
                         return [2 /*return*/];
                     }
                     octokit = github.getOctokit(token);

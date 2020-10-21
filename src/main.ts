@@ -19,7 +19,8 @@ async function run() {
     const prNumber = getPrNumber();
     
     if (!prNumber) {
-      console.log("Could not get pull request number from context, exiting");
+      console.log(github.context);
+      console.error("Could not get pull request number from context, exiting");
       return;
     }
 
