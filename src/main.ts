@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import { Minimatch, IMinimatch } from "minimatch";
+import { GitHub } from "@actions/github/lib/utils";
 
 interface MatchConfig {
   all?: string[];
@@ -21,7 +22,9 @@ async function run() {
     const syncLabels = !!core.getInput("sync-labels", { required: false });
     const config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
 
-    const pr = github.context.payload.pull_request;
+    const payload = github.context.payload;
+
+    const pr = payload.pull_request;
 
 
     if (!pr) {
@@ -39,28 +42,26 @@ async function run() {
       return;
     }
 
-    // const octokit = github.getOctokit(token);
+    const octokit = github.getOctokit(token);
 
-    // // console.log(octokit);
+    if(config.head) {
+      // apply labels based upon the name of the head branch
+      octokit.client.addLabels(
+        payload.user.name,
+        payload.base.repo.name,
+        prNumber,
+        ['hello', 'world']
+      )
+    }
 
-    // const repo = octokit.context.repo;
-    // const { data: pullRequest } = await octokit.pulls.get({
-    //   owner: repo.owner,
-    //   repo: repo.repo,
-    //   pull_number: prNumber,
-    // });
+    if(config.base) {
+      // apply labels based upon the name of the base branch
+    }
 
-    // core.debug("Getting changed files for PR #${prNumber}");
+    if(config.files) {
+      // apply labels based upon the files in question
+    }
 
-    // const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
-
-    // const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
-    //   octokit,
-    //   configPath
-    // );
-
-    // const labels: string[] = [];
-    // const labelsToRemove: string[] = [];
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);

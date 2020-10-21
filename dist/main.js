@@ -62,7 +62,7 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, config, pr, prNumber;
+        var token, configPath, syncLabels, config, payload, pr, prNumber, octokit;
         return __generator(this, function (_a) {
             try {
                 token = core.getInput("repo-token", { required: true });
@@ -71,7 +71,8 @@ function run() {
                 });
                 syncLabels = !!core.getInput("sync-labels", { required: false });
                 config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
-                pr = github.context.payload.pull_request;
+                payload = github.context.payload;
+                pr = payload.pull_request;
                 if (!pr) {
                     throw new Error("No pull request found");
                 }
@@ -83,22 +84,17 @@ function run() {
                     console.error("Could not get pull request number from context, exiting");
                     return [2 /*return*/];
                 }
-                // const octokit = github.getOctokit(token);
-                // // console.log(octokit);
-                // const repo = octokit.context.repo;
-                // const { data: pullRequest } = await octokit.pulls.get({
-                //   owner: repo.owner,
-                //   repo: repo.repo,
-                //   pull_number: prNumber,
-                // });
-                // core.debug("Getting changed files for PR #${prNumber}");
-                // const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
-                // const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
-                //   octokit,
-                //   configPath
-                // );
-                // const labels: string[] = [];
-                // const labelsToRemove: string[] = [];
+                octokit = github.getOctokit(token);
+                if (config.head) {
+                    // apply labels based upon the name of the head branch
+                    octokit.client.addLabels(payload.user.name, payload.base.repo.name, prNumber, ['hello', 'world']);
+                }
+                if (config.base) {
+                    // apply labels based upon the name of the base branch
+                }
+                if (config.files) {
+                    // apply labels based upon the files in question
+                }
             }
             catch (error) {
                 core.error(error);
