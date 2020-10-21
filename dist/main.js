@@ -111,7 +111,7 @@ issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (yamlArray) { // If the array exists
-                console.log(octokit.constructor);
+                console.log(octokit.constructor.name);
                 yamlArray.forEach(function (element) {
                     for (var label in element) { // It'll be an array of objects so iterate through that
                         if (element[label].includes(comp)) { // If the attribute label equals comp string
