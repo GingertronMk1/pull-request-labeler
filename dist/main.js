@@ -106,14 +106,16 @@ function run() {
         });
     });
 }
-function addBranchLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
+function addBranchLabels(yamlArray, comp, octokit, // I don't know what the specific type of an octokit is - apparently not an object
+issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (yamlArray) { // If the array exists
+                console.log(octokit.constructor.name);
                 yamlArray.forEach(function (element) {
-                    for (var prop in element) { // It'll be an array of objects so iterate through that
-                        if (element[prop].includes(comp)) { // If the attribute label equals comp string
-                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: [prop] }); // Add labels
+                    for (var label in element) { // It'll be an array of objects so iterate through that
+                        if (element[label].includes(comp)) { // If the attribute label equals comp string
+                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: [label] }); // Add labels
                         }
                     }
                 });

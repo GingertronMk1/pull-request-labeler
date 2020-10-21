@@ -46,16 +46,17 @@ async function run() {
 async function addBranchLabels(
   yamlArray: object[],
   comp: string,
-  octokit,
-  issue_number,
-  owner,
-  repo
+  octokit: github.OctokitWithDefaults,     // I don't know what the specific type of an octokit is - apparently not an object
+  issue_number: number,
+  owner: string,
+  repo: string
 ) {
   if(yamlArray) {                                 // If the array exists
+  console.log(octokit.constructor.name);
     yamlArray.forEach(element => {                // Iterate through it
-      for(const prop in element) {                // It'll be an array of objects so iterate through that
-        if(element[prop].includes(comp)) {        // If the attribute label equals comp string
-          octokit.issues.addLabels({issue_number, owner, repo, labels: [prop] }); // Add labels
+      for(const label in element) {                // It'll be an array of objects so iterate through that
+        if(element[label].includes(comp)) {        // If the attribute label equals comp string
+          octokit.issues.addLabels({issue_number, owner, repo, labels: [label] }); // Add labels
         }
       }
       
