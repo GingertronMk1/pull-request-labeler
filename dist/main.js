@@ -106,12 +106,12 @@ function run() {
         });
     });
 }
-function addBranchLabels(yamlArray, comp, octokit, //: object,
+function addBranchLabels(yamlArray, comp, octokit, // I don't know what the specific type of an octokit is - apparently not an object
 issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (yamlArray) { // If the array exists
-                console.log(octokit.type);
+                console.log(octokit.constructor);
                 yamlArray.forEach(function (element) {
                     for (var label in element) { // It'll be an array of objects so iterate through that
                         if (element[label].includes(comp)) { // If the attribute label equals comp string
