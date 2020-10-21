@@ -46,7 +46,7 @@ async function run() {
 async function addBranchLabels(
   yamlArray: object[],
   comp: string,
-  octokit: github.Octokit,
+  octokit,
   issue_number,
   owner,
   repo
