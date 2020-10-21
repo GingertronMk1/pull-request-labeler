@@ -61,17 +61,18 @@ var yaml = __importStar(require("js-yaml"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, pr, prNumber, octokit, repo, pullRequest, changedFiles, labelGlobs, labels, labelsToRemove, error_1;
+        var token, configPath, syncLabels, config, pr, prNumber, octokit, repo, pullRequest, changedFiles, labelGlobs, labels, labelsToRemove, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
-                    console.log(JSON.stringify(github.context.payload, undefined, 2));
                     token = core.getInput("repo-token", { required: true });
                     configPath = core.getInput("configuration-path", {
                         required: true,
                     });
                     syncLabels = !!core.getInput("sync-labels", { required: false });
+                    config = yaml.safeLoad(configPath);
+                    JSONprint(config);
                     pr = github.context.payload.pull_request;
                     if (!pr) {
                         throw new Error("No pull request found");
@@ -302,6 +303,9 @@ function removeLabels(client, prNumber, labels) {
             }
         });
     });
+}
+function JSONprint(json) {
+    return console.log(JSON.stringify(json));
 }
 console.log("Running");
 run();

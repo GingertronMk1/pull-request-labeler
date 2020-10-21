@@ -12,12 +12,15 @@ type StringOrMatchConfig = string | MatchConfig;
 
 async function run() {
   try {
-    console.log(JSON.stringify(github.context.payload, undefined, 2));
+    //console.log(JSON.stringify(github.context.payload, undefined, 2));
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", {
       required: true,
     });
     const syncLabels = !!core.getInput("sync-labels", { required: false });
+    const config = yaml.safeLoad(configPath);
+
+    JSONprint(config);
 
     const pr = github.context.payload.pull_request;
 
@@ -242,6 +245,10 @@ async function removeLabels(client, prNumber: number, labels: string[]) {
       })
     )
   );
+}
+
+function JSONprint(json: JSON) {
+  return console.log(JSON.stringify(json));
 }
 
 console.log("Running");
