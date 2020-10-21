@@ -61,7 +61,7 @@ var yaml = __importStar(require("js-yaml"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, pr, prNumber, octokit, repo, pullRequest, changedFiles, labelGlobs, labels, labelsToRemove, error_1;
+        var token, configPath, syncLabels, prNumber, octokit, repo, pullRequest, changedFiles, labelGlobs, labels, labelsToRemove, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -69,11 +69,11 @@ function run() {
                     token = core.getInput("repo-token", { required: true });
                     configPath = core.getInput("configuration-path", { required: true });
                     syncLabels = !!core.getInput("sync-labels", { required: false });
-                    pr = github.context.payload.pull_request;
-                    if (!pr) {
-                        throw Error("Could not find pull request from context");
+                    prNumber = getPrNumber();
+                    if (!prNumber) {
+                        console.log("Could not get pull request number from context, exiting");
+                        return [2 /*return*/];
                     }
-                    prNumber = pr.number;
                     octokit = github.getOctokit(token);
                     repo = octokit.context.repo;
                     console.log(typeof octokit);
@@ -103,6 +103,13 @@ function run() {
             }
         });
     });
+}
+function getPrNumber() {
+    var pullRequest = github.context.payload.pull_request;
+    if (!pullRequest) {
+        return undefined;
+    }
+    return pullRequest.number;
 }
 function getChangedFiles(client, prNumber) {
     return __awaiter(this, void 0, void 0, function () {
