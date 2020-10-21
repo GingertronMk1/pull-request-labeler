@@ -39,29 +39,23 @@ async function run() {
       });
 
       if (config.head) {
-        config.head.forEach((element, index) => {
-          console.table({
-            prhead: pullRequest.head.ref,
-            compindex: index,
-            compelement: element
-          });
-          if(pullRequest.head.ref == index) {
-            octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+        for(const prop in config.head) {
+          if(prop === pullRequest.head.ref) {
+            if(pullRequest.head.ref == prop) {
+              octokit.issues.addLabels({issue_number, owner, repo, labels: (config.head)[prop] })
+            }
           }
-        });
+        }
       }
 
       if (config.base) {
-        config.base.forEach((element, index) => {
-          console.table({
-            prbase: pullRequest.base.ref,
-            compindex: index,
-            compelement: element
-          });
-          if(pullRequest.base.ref == index) {
-            octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+        for(const prop in config.base) {
+          if(prop === pullRequest.base.ref) {
+            if(pullRequest.base.ref == prop) {
+              octokit.issues.addLabels({issue_number, owner, repo, labels: (config.base)[prop] })
+            }
           }
-        });
+        }
       }
 
       if (config.files) {

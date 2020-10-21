@@ -62,49 +62,43 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest_1, _a, issue_number_1, _b, owner_1, repo_1, repoToken, configPath, config, octokit_1;
+        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, prop, prop;
         return __generator(this, function (_c) {
             try {
-                pullRequest_1 = github.context.payload.pull_request;
-                if (!pullRequest_1) {
+                pullRequest = github.context.payload.pull_request;
+                if (!pullRequest) {
                     throw new Error("No pull request information found");
                 }
-                _a = github.context, issue_number_1 = _a.issue.number, _b = _a.repo, owner_1 = _b.owner, repo_1 = _b.repo;
+                _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
                 repoToken = core.getInput("repo-token", { required: true });
                 configPath = core.getInput("configuration-path", {
                     required: true,
                 });
                 config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                octokit_1 = github.getOctokit(repoToken);
+                octokit = github.getOctokit(repoToken);
                 // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
                 // console.log(config);
                 console.table({
-                    headref: pullRequest_1.head.ref,
-                    baseref: pullRequest_1.base.ref
+                    headref: pullRequest.head.ref,
+                    baseref: pullRequest.base.ref
                 });
                 if (config.head) {
-                    config.head.forEach(function (element, index) {
-                        console.table({
-                            prhead: pullRequest_1.head.ref,
-                            compindex: index,
-                            compelement: element
-                        });
-                        if (pullRequest_1.head.ref == index) {
-                            octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
+                    for (prop in config.head) {
+                        if (prop === pullRequest.head.ref) {
+                            if (pullRequest.head.ref == prop) {
+                                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.head)[prop] });
+                            }
                         }
-                    });
+                    }
                 }
                 if (config.base) {
-                    config.base.forEach(function (element, index) {
-                        console.table({
-                            prbase: pullRequest_1.base.ref,
-                            compindex: index,
-                            compelement: element
-                        });
-                        if (pullRequest_1.base.ref == index) {
-                            octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
+                    for (prop in config.base) {
+                        if (prop === pullRequest.base.ref) {
+                            if (pullRequest.base.ref == prop) {
+                                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: (config.base)[prop] });
+                            }
                         }
-                    });
+                    }
                 }
                 if (config.files) {
                     config.files.forEach(function (element, index) {
