@@ -61,54 +61,48 @@ var yaml = __importStar(require("js-yaml"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, configPath, syncLabels, config, pr, prNumber, octokit, repo, pullRequest, changedFiles, labelGlobs, labels, labelsToRemove, error_1;
+        var token, configPath, syncLabels, config, pr, prNumber;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 4, , 5]);
-                    token = core.getInput("repo-token", { required: true });
-                    configPath = core.getInput("configuration-path", {
-                        required: true,
-                    });
-                    syncLabels = !!core.getInput("sync-labels", { required: false });
-                    config = yaml.safeLoad(configPath);
-                    JSONprint(config);
-                    pr = github.context.payload.pull_request;
-                    if (!pr) {
-                        throw new Error("No pull request found");
-                    }
-                    prNumber = pr.number;
-                    if (!prNumber) {
-                        console.log(github.context.payload);
-                        console.error("Could not get pull request number from context, exiting");
-                        return [2 /*return*/];
-                    }
-                    octokit = github.getOctokit(token);
-                    repo = octokit.context.repo;
-                    return [4 /*yield*/, octokit.pulls.get({
-                            owner: repo.owner,
-                            repo: repo.repo,
-                            pull_number: prNumber,
-                        })];
-                case 1:
-                    pullRequest = (_a.sent()).data;
-                    core.debug("Getting changed files for PR #${prNumber}");
-                    return [4 /*yield*/, getChangedFiles(octokit, prNumber)];
-                case 2:
-                    changedFiles = _a.sent();
-                    return [4 /*yield*/, getLabelGlobs(octokit, configPath)];
-                case 3:
-                    labelGlobs = _a.sent();
-                    labels = [];
-                    labelsToRemove = [];
-                    return [3 /*break*/, 5];
-                case 4:
-                    error_1 = _a.sent();
-                    core.error(error_1);
-                    core.setFailed(error_1.message);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+            try {
+                token = core.getInput("repo-token", { required: true });
+                configPath = core.getInput("configuration-path", {
+                    required: true,
+                });
+                syncLabels = !!core.getInput("sync-labels", { required: false });
+                config = yaml.safeLoad(configPath);
+                JSONprint(config);
+                pr = github.context.payload.pull_request;
+                if (!pr) {
+                    throw new Error("No pull request found");
+                }
+                prNumber = pr.number;
+                if (!prNumber) {
+                    console.log(github.context.payload);
+                    console.error("Could not get pull request number from context, exiting");
+                    return [2 /*return*/];
+                }
+                // const octokit = github.getOctokit(token);
+                // // console.log(octokit);
+                // const repo = octokit.context.repo;
+                // const { data: pullRequest } = await octokit.pulls.get({
+                //   owner: repo.owner,
+                //   repo: repo.repo,
+                //   pull_number: prNumber,
+                // });
+                // core.debug("Getting changed files for PR #${prNumber}");
+                // const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
+                // const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
+                //   octokit,
+                //   configPath
+                // );
+                // const labels: string[] = [];
+                // const labelsToRemove: string[] = [];
             }
+            catch (error) {
+                core.error(error);
+                core.setFailed(error.message);
+            }
+            return [2 /*return*/];
         });
     });
 }

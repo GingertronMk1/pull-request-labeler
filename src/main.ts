@@ -36,28 +36,28 @@ async function run() {
       return;
     }
 
-    const octokit = github.getOctokit(token);
+    // const octokit = github.getOctokit(token);
 
-    // console.log(octokit);
+    // // console.log(octokit);
 
-    const repo = octokit.context.repo;
-    const { data: pullRequest } = await octokit.pulls.get({
-      owner: repo.owner,
-      repo: repo.repo,
-      pull_number: prNumber,
-    });
+    // const repo = octokit.context.repo;
+    // const { data: pullRequest } = await octokit.pulls.get({
+    //   owner: repo.owner,
+    //   repo: repo.repo,
+    //   pull_number: prNumber,
+    // });
 
-    core.debug("Getting changed files for PR #${prNumber}");
+    // core.debug("Getting changed files for PR #${prNumber}");
 
-    const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
+    // const changedFiles: string[] = await getChangedFiles(octokit, prNumber);
 
-    const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
-      octokit,
-      configPath
-    );
+    // const labelGlobs: Map<string, StringOrMatchConfig[]> = await getLabelGlobs(
+    //   octokit,
+    //   configPath
+    // );
 
-    const labels: string[] = [];
-    const labelsToRemove: string[] = [];
+    // const labels: string[] = [];
+    // const labelsToRemove: string[] = [];
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
