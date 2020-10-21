@@ -62,61 +62,43 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, issue_number, _b, owner, repo, octokit, token, configPath, syncLabels, config, payload, pr, prNumber, octokit, error_1;
+        var _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, error_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    _c.trys.push([0, 5, , 6]);
-                    if (!1) return [3 /*break*/, 1];
+                    _c.trys.push([0, 3, , 4]);
                     _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
-                    octokit = github.getOctokit(core.getInput("repo-token", { required: true }));
-                    octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
-                    return [3 /*break*/, 4];
-                case 1:
-                    token = core.getInput("repo-token", { required: true });
+                    repoToken = core.getInput("repo-token", { required: true });
                     configPath = core.getInput("configuration-path", {
                         required: true,
                     });
-                    syncLabels = !!core.getInput("sync-labels", { required: false });
                     config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                    payload = github.context.payload;
-                    pr = payload.pull_request;
-                    if (!pr) {
-                        throw new Error("No pull request found");
-                    }
-                    prNumber = pr.number;
-                    if (!prNumber) {
-                        console.error("Could not get pull request number from context, exiting");
-                        return [2 /*return*/];
-                    }
-                    octokit = github.getOctokit(token);
-                    if (!config.head) return [3 /*break*/, 3];
+                    octokit = github.getOctokit(repoToken);
+                    octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
+                    if (!config.head) return [3 /*break*/, 2];
                     // apply labels based upon the name of the head branch
                     return [4 /*yield*/, octokit.issues.addLabels({
-                            owner: pr.user.name,
-                            repo: pr.base.repo.name,
-                            issue_number: prNumber,
-                            labels: ["hello", "world"],
+                            issue_number: issue_number, owner: owner, repo: repo,
+                            labels: ["Wag", "warn"]
                         })];
-                case 2:
+                case 1:
                     // apply labels based upon the name of the head branch
                     _c.sent();
-                    _c.label = 3;
-                case 3:
+                    _c.label = 2;
+                case 2:
                     if (config.base) {
                         // apply labels based upon the name of the base branch
                     }
                     if (config.files) {
                         // apply labels based upon the files in question
                     }
-                    _c.label = 4;
-                case 4: return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 4];
+                case 3:
                     error_1 = _c.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });

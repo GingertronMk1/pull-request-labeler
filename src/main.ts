@@ -14,51 +14,23 @@ type StringOrMatchConfig = string | MatchConfig;
 
 async function run() {
   try {
-    if (1) {
       const { issue: { number: issue_number }, repo: { owner, repo }  } = github.context;
-
-      const octokit = github.getOctokit(core.getInput("repo-token", {required: true}));
-
-      octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
-
-    } else {
-      //console.log(JSON.stringify(github.context.payload, undefined, 2));
-      const token = core.getInput("repo-token", { required: true });
+      const repoToken = core.getInput("repo-token", {required: true});
       const configPath = core.getInput("configuration-path", {
         required: true,
       });
-      const syncLabels = !!core.getInput("sync-labels", { required: false });
+
       const config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
 
-      const payload = github.context.payload;
+      const octokit = github.getOctokit(repoToken);
 
-      const pr = payload.pull_request;
+      octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
 
-      if (!pr) {
-        throw new Error("No pull request found");
-      }
-
-      // console.log(pr)
-      // console.log(config);
-
-      const prNumber = pr.number;
-
-      if (!prNumber) {
-        console.error(
-          "Could not get pull request number from context, exiting"
-        );
-        return;
-      }
-
-      const octokit = github.getOctokit(token);
-
+      //console.log(JSON.stringify(github.context.payload, undefined, 2));
       if (config.head) {
         // apply labels based upon the name of the head branch
         await octokit.issues.addLabels({
-          owner: pr.user.name,
-          repo: pr.base.repo.name,
-          issue_number: prNumber,
-          labels: ["hello", "world"],
+          issue_number, owner, repo, labels: ["Wag", "warn"]
         });
       }
 
@@ -69,7 +41,6 @@ async function run() {
       if (config.files) {
         // apply labels based upon the files in question
       }
-    }
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
