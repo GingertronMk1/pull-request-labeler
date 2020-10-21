@@ -28,8 +28,8 @@ async function run() {
         baseref: br
       });
 
-     await addLabels(config.head, hr, octokit, issue_number, owner, repo);
-     await addLabels(config.base, br, octokit, issue_number, owner, repo);
+     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
+     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
 
       if (config.files) {
         // this will be more difficult
@@ -43,7 +43,7 @@ async function run() {
   }
 }
 
-async function addLabels(
+async function addBranchLabels(
   yamlArray: object[],
   comp: string,
   octokit: github.Octokit,
@@ -51,11 +51,11 @@ async function addLabels(
   owner,
   repo
 ) {
-  if(yamlArray) {
-    yamlArray.forEach(element => {
-      for(const prop in element) {
-        if(prop === comp) {
-          octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop]});
+  if(yamlArray) {                                 // If the array exists
+    yamlArray.forEach(element => {                // Iterate through it
+      for(const prop in element) {                // It'll be an array of objects so iterate through that
+        if(element[prop].includes(comp)) {        // If the attribute label equals comp string
+          octokit.issues.addLabels({issue_number, owner, repo, labels: [prop] }); // Add labels
         }
       }
       

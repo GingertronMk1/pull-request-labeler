@@ -84,10 +84,10 @@ function run() {
                         headref: hr,
                         baseref: br
                     });
-                    return [4 /*yield*/, addLabels(config.head, hr, octokit, issue_number, owner, repo)];
+                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 1:
                     _c.sent();
-                    return [4 /*yield*/, addLabels(config.base, br, octokit, issue_number, owner, repo)];
+                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
                     _c.sent();
                     if (config.files) {
@@ -106,14 +106,14 @@ function run() {
         });
     });
 }
-function addLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
+function addBranchLabels(yamlArray, comp, octokit, issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            if (yamlArray) {
+            if (yamlArray) { // If the array exists
                 yamlArray.forEach(function (element) {
-                    for (var prop in element) {
-                        if (prop === comp) {
-                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: element[prop] });
+                    for (var prop in element) { // It'll be an array of objects so iterate through that
+                        if (element[prop].includes(comp)) { // If the attribute label equals comp string
+                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: [prop] }); // Add labels
                         }
                     }
                 });
