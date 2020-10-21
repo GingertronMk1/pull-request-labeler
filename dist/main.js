@@ -71,11 +71,12 @@ function run() {
                 });
                 syncLabels = !!core.getInput("sync-labels", { required: false });
                 config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
-                console.log(config);
                 pr = github.context.payload.pull_request;
                 if (!pr) {
                     throw new Error("No pull request found");
                 }
+                console.log(pr);
+                console.log(config);
                 prNumber = pr.number;
                 if (!prNumber) {
                     console.log(github.context.payload);

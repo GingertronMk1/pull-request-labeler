@@ -21,13 +21,15 @@ async function run() {
     const syncLabels = !!core.getInput("sync-labels", { required: false });
     const config = yaml.safeLoad(fs.readFileSync(configPath), 'utf8');
 
-    console.log(config);
-
     const pr = github.context.payload.pull_request;
+
 
     if (!pr) {
       throw new Error("No pull request found");
     }
+
+    console.log(pr)
+    console.log(config);
 
     const prNumber = pr.number;
 
