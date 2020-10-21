@@ -65,9 +65,15 @@ function run() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 4, , 5]);
+                    _a.trys.push([0, 6, , 7]);
+                    if (!1) return [3 /*break*/, 1];
+                    console.log(JSON.stringify(github.context.payload, undefined, 2));
+                    return [3 /*break*/, 5];
+                case 1:
                     token = core.getInput("repo-token", { required: true });
-                    configPath = core.getInput("configuration-path", { required: true });
+                    configPath = core.getInput("configuration-path", {
+                        required: true,
+                    });
                     syncLabels = !!core.getInput("sync-labels", { required: false });
                     prNumber = getPrNumber();
                     if (!prNumber) {
@@ -82,24 +88,25 @@ function run() {
                             repo: repo.repo,
                             pull_number: prNumber,
                         })];
-                case 1:
+                case 2:
                     pullRequest = (_a.sent()).data;
                     core.debug("Getting changed files for PR #${prNumber}");
                     return [4 /*yield*/, getChangedFiles(octokit, prNumber)];
-                case 2:
+                case 3:
                     changedFiles = _a.sent();
                     return [4 /*yield*/, getLabelGlobs(octokit, configPath)];
-                case 3:
+                case 4:
                     labelGlobs = _a.sent();
                     labels = [];
                     labelsToRemove = [];
-                    return [3 /*break*/, 5];
-                case 4:
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
                     error_1 = _a.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });
@@ -160,7 +167,7 @@ function fetchContent(client, repoPath) {
                         owner: github.context.repo.owner,
                         repo: github.context.repo.repo,
                         path: repoPath,
-                        ref: github.context.sha
+                        ref: github.context.sha,
                     })];
                 case 1:
                     response = _a.sent();
@@ -187,7 +194,7 @@ function getLabelGlobMapFromObject(configObject) {
 function toMatchConfig(config) {
     if (typeof config === "string") {
         return {
-            any: [config]
+            any: [config],
         };
     }
     return config;
@@ -268,7 +275,7 @@ function addLabels(client, prNumber, labels) {
                         owner: github.context.repo.owner,
                         repo: github.context.repo.repo,
                         issue_number: prNumber,
-                        labels: labels
+                        labels: labels,
                     })];
                 case 1:
                     _a.sent();
@@ -286,7 +293,7 @@ function removeLabels(client, prNumber, labels) {
                             owner: github.context.repo.owner,
                             repo: github.context.repo.repo,
                             issue_number: prNumber,
-                            name: label
+                            name: label,
                         });
                     }))];
                 case 1:
