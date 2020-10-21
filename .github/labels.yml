@@ -6,5 +6,5 @@ base:
   - testing:
     - testing
 
-label1:
+enhancement:
   - src/*
