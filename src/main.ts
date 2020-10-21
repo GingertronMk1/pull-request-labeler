@@ -20,6 +20,8 @@ async function run() {
         required: true,
       });
 
+      console.log(github.context.payload.pull_request);
+
       const config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
 
       const octokit = github.getOctokit(repoToken);
@@ -29,19 +31,21 @@ async function run() {
 
       //console.log(JSON.stringify(github.context.payload, undefined, 2));
       if (config.head) {
-        // apply labels based upon the name of the head branch
-        // console.log(config.head);
-        await octokit.issues.addLabels({
-          issue_number, owner, repo, labels: ["Wag", "warn"]
+        config.head.forEach((element, index) => {
+          console.log(index, '=>', element);
         });
       }
 
       if (config.base) {
-        // apply labels based upon the name of the base branch
+        config.base.forEach((element, index) => {
+          console.log(index, '=>', element);
+        });
       }
 
       if (config.files) {
-        // apply labels based upon the files in question
+        config.files.forEach((element, index) => {
+          console.log(index, '=>', element);
+        });
       }
   } catch (error) {
     core.error(error);

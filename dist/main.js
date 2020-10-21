@@ -62,47 +62,41 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, error_1;
+        var _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit;
         return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _c.trys.push([0, 3, , 4]);
-                    _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
-                    repoToken = core.getInput("repo-token", { required: true });
-                    configPath = core.getInput("configuration-path", {
-                        required: true,
+            try {
+                _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                repoToken = core.getInput("repo-token", { required: true });
+                configPath = core.getInput("configuration-path", {
+                    required: true,
+                });
+                console.log(github.context.payload.pull_request);
+                config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
+                octokit = github.getOctokit(repoToken);
+                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
+                console.log(config);
+                //console.log(JSON.stringify(github.context.payload, undefined, 2));
+                if (config.head) {
+                    config.head.forEach(function (element, index) {
+                        console.log(index, '=>', element);
                     });
-                    config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                    octokit = github.getOctokit(repoToken);
-                    octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
-                    console.log(config);
-                    if (!config.head) return [3 /*break*/, 2];
-                    // apply labels based upon the name of the head branch
-                    // console.log(config.head);
-                    return [4 /*yield*/, octokit.issues.addLabels({
-                            issue_number: issue_number, owner: owner, repo: repo,
-                            labels: ["Wag", "warn"]
-                        })];
-                case 1:
-                    // apply labels based upon the name of the head branch
-                    // console.log(config.head);
-                    _c.sent();
-                    _c.label = 2;
-                case 2:
-                    if (config.base) {
-                        // apply labels based upon the name of the base branch
-                    }
-                    if (config.files) {
-                        // apply labels based upon the files in question
-                    }
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_1 = _c.sent();
-                    core.error(error_1);
-                    core.setFailed(error_1.message);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                }
+                if (config.base) {
+                    config.base.forEach(function (element, index) {
+                        console.log(index, '=>', element);
+                    });
+                }
+                if (config.files) {
+                    config.files.forEach(function (element, index) {
+                        console.log(index, '=>', element);
+                    });
+                }
             }
+            catch (error) {
+                core.error(error);
+                core.setFailed(error.message);
+            }
+            return [2 /*return*/];
         });
     });
 }
