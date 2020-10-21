@@ -2,15 +2,6 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import { Minimatch, IMinimatch } from "minimatch";
-import { getOctokitOptions, GitHub } from "@actions/github/lib/utils";
-
-interface MatchConfig {
-  all?: string[];
-  any?: string[];
-}
-
-type StringOrMatchConfig = string | MatchConfig;
 
 async function run() {
   try {
@@ -25,8 +16,6 @@ async function run() {
         required: true,
       });
 
-
-
       const config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
 
       const octokit = github.getOctokit(repoToken);
@@ -39,36 +28,6 @@ async function run() {
         baseref: br
       });
 
-      /*
-      if (config.head) {
-        config.head.forEach(element => {
-          for(const prop in element) {
-            console.table({
-              headref: hr,
-              prop: prop,
-              chprop: element[prop]
-            })
-            if(prop === hr) {
-              octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-            }
-          }
-        });
-      }
-      if (config.base) {
-        config.base.forEach(element => {
-          for(const prop in element) {
-            console.table({
-              baseref: br,
-              prop: prop,
-              chprop: element[prop]
-            })
-            if(prop === br) {
-              octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-            }
-          }
-        });
-      }
-      */
      await addLabels(config.head, hr, octokit, issue_number, owner, repo);
      await addLabels(config.base, br, octokit, issue_number, owner, repo);
 
@@ -87,7 +46,7 @@ async function run() {
 async function addLabels(
   yamlArray: object[],
   comp: string,
-  octokit,
+  octokit: github.Octokit,
   issue_number,
   owner,
   repo

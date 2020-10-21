@@ -84,68 +84,8 @@ function run() {
                         headref: hr,
                         baseref: br
                     });
-                    /*
-                    if (config.head) {
-                      config.head.forEach(element => {
-                        for(const prop in element) {
-                          console.table({
-                            headref: hr,
-                            prop: prop,
-                            chprop: element[prop]
-                          })
-                          if(prop === hr) {
-                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-                          }
-                        }
-                      });
-                    }
-                    if (config.base) {
-                      config.base.forEach(element => {
-                        for(const prop in element) {
-                          console.table({
-                            baseref: br,
-                            prop: prop,
-                            chprop: element[prop]
-                          })
-                          if(prop === br) {
-                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-                          }
-                        }
-                      });
-                    }
-                    */
                     return [4 /*yield*/, addLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 1:
-                    /*
-                    if (config.head) {
-                      config.head.forEach(element => {
-                        for(const prop in element) {
-                          console.table({
-                            headref: hr,
-                            prop: prop,
-                            chprop: element[prop]
-                          })
-                          if(prop === hr) {
-                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-                          }
-                        }
-                      });
-                    }
-                    if (config.base) {
-                      config.base.forEach(element => {
-                        for(const prop in element) {
-                          console.table({
-                            baseref: br,
-                            prop: prop,
-                            chprop: element[prop]
-                          })
-                          if(prop === br) {
-                            octokit.issues.addLabels({issue_number, owner, repo, labels: element[prop] })
-                          }
-                        }
-                      });
-                    }
-                    */
                     _c.sent();
                     return [4 /*yield*/, addLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
