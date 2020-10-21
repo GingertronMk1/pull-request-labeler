@@ -76,8 +76,8 @@ function run() {
                         return [2 /*return*/];
                     }
                     octokit = github.getOctokit(token);
-                    repo = octokit.context.repo;
                     console.log(typeof octokit);
+                    repo = octokit.context.repo;
                     return [4 /*yield*/, octokit.pulls.get({
                             owner: repo.owner,
                             repo: repo.repo,
