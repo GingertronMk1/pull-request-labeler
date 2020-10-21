@@ -33,11 +33,13 @@ async function run() {
 
       // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
       // console.log(config);
+      console.log(pullRequest.head.ref, pullRequest.tail.ref);
 
       if (config.head) {
         config.head.forEach((element, index) => {
-          if(pullRequest.head.ref === index) {
+          if(pullRequest.head.ref == index) {
             octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+            console.log('valid index:', index);
 
           }
         });
@@ -45,8 +47,9 @@ async function run() {
 
       if (config.base) {
         config.base.forEach((element, index) => {
-          if(pullRequest.base.ref === index) {
+          if(pullRequest.base.ref == index) {
             octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+            console.log('valid index:', index);
 
           }
         });
