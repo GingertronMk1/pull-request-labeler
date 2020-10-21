@@ -78,7 +78,7 @@ function run() {
                 octokit_1 = github.getOctokit(repoToken);
                 // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
                 // console.log(config);
-                console.log(pullRequest_1.head.ref, pullRequest_1.tail.ref);
+                console.table({ headref: pullRequest_1.head.ref, baseref: pullRequest_1.base.ref });
                 if (config.head) {
                     config.head.forEach(function (element, index) {
                         if (pullRequest_1.head.ref == index) {

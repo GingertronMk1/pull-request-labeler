@@ -33,7 +33,7 @@ async function run() {
 
       // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
       // console.log(config);
-      console.log(pullRequest.head.ref, pullRequest.tail.ref);
+      console.table({headref: pullRequest.head.ref, baseref: pullRequest.base.ref});
 
       if (config.head) {
         config.head.forEach((element, index) => {
