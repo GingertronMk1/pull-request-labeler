@@ -62,33 +62,39 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit;
+        var pullRequest_1, _a, issue_number_1, _b, owner_1, repo_1, repoToken, configPath, config, octokit_1;
         return __generator(this, function (_c) {
             try {
-                _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                pullRequest_1 = github.context.payload.pull_request;
+                if (!pullRequest_1) {
+                    throw new Error("No pull request information found");
+                }
+                _a = github.context, issue_number_1 = _a.issue.number, _b = _a.repo, owner_1 = _b.owner, repo_1 = _b.repo;
                 repoToken = core.getInput("repo-token", { required: true });
                 configPath = core.getInput("configuration-path", {
                     required: true,
                 });
-                console.log(github.context.payload.pull_request);
                 config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                octokit = github.getOctokit(repoToken);
-                octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: ["Hello", "World"] });
-                console.log(config);
-                //console.log(JSON.stringify(github.context.payload, undefined, 2));
+                octokit_1 = github.getOctokit(repoToken);
+                // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
+                // console.log(config);
                 if (config.head) {
                     config.head.forEach(function (element, index) {
-                        console.log(index, '=>', element);
+                        if (pullRequest_1.head.ref === index) {
+                            octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
+                        }
                     });
                 }
                 if (config.base) {
                     config.base.forEach(function (element, index) {
-                        console.log(index, '=>', element);
+                        if (pullRequest_1.base.ref === index) {
+                            octokit_1.issues.addLabels({ issue_number: issue_number_1, owner: owner_1, repo: repo_1, labels: element });
+                        }
                     });
                 }
                 if (config.files) {
                     config.files.forEach(function (element, index) {
-                        console.log(index, '=>', element);
+                        // console.log(index, '=>', element);
                     });
                 }
             }

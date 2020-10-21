@@ -14,37 +14,47 @@ type StringOrMatchConfig = string | MatchConfig;
 
 async function run() {
   try {
+      const pullRequest = github.context.payload.pull_request;
+      if(!pullRequest) {
+        throw new Error("No pull request information found");
+      }
+
       const { issue: { number: issue_number }, repo: { owner, repo }  } = github.context;
       const repoToken = core.getInput("repo-token", {required: true});
       const configPath = core.getInput("configuration-path", {
         required: true,
       });
 
-      console.log(github.context.payload.pull_request);
+      // console.log(github.context.payload.pull_request);
 
       const config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
 
       const octokit = github.getOctokit(repoToken);
 
-      octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
-      console.log(config);
+      // octokit.issues.addLabels({issue_number, owner, repo, labels: ["Hello", "World"] })
+      // console.log(config);
 
-      //console.log(JSON.stringify(github.context.payload, undefined, 2));
       if (config.head) {
         config.head.forEach((element, index) => {
-          console.log(index, '=>', element);
+          if(pullRequest.head.ref === index) {
+            octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+
+          }
         });
       }
 
       if (config.base) {
         config.base.forEach((element, index) => {
-          console.log(index, '=>', element);
+          if(pullRequest.base.ref === index) {
+            octokit.issues.addLabels({issue_number, owner, repo, labels: element })
+
+          }
         });
       }
 
       if (config.files) {
         config.files.forEach((element, index) => {
-          console.log(index, '=>', element);
+          // console.log(index, '=>', element);
         });
       }
   } catch (error) {
