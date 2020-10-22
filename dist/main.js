@@ -59,49 +59,47 @@ var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
 var yaml = __importStar(require("js-yaml"));
 var fs = __importStar(require("fs"));
+var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var context, pullRequest, issue_number, _a, owner, repo, repoToken, configPath, config, octokit, hr, br, files, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _c.trys.push([0, 3, , 4]);
-                    pullRequest = github.context.payload.pull_request;
+                    _b.trys.push([0, 5, , 6]);
+                    context = github.context;
+                    pullRequest = context.payload.pull_request;
                     if (!pullRequest) {
                         throw new Error("No pull request information found");
                     }
-                    _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                    issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
                     repoToken = core.getInput("repo-token", { required: true });
                     configPath = core.getInput("configuration-path", {
                         required: true,
                     });
                     config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
                     octokit = github.getOctokit(repoToken);
-                    console.table(JSON.stringify(config));
                     hr = pullRequest.head.ref;
                     br = pullRequest.base.ref;
-                    console.table({
-                        headref: hr,
-                        baseref: br
-                    });
-                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
+                    return [4 /*yield*/, getChangedFiles(octokit, issue_number, owner, repo)];
                 case 1:
-                    _c.sent();
-                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
+                    files = _b.sent();
+                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 2:
-                    _c.sent();
-                    if (config.files) {
-                        // this will be more difficult
-                        config.files.forEach(function (element, index) {
-                        });
-                    }
-                    return [3 /*break*/, 4];
+                    _b.sent();
+                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 3:
-                    error_1 = _c.sent();
+                    _b.sent();
+                    return [4 /*yield*/, addFileLabels(config.files, files, octokit, issue_number, owner, repo)];
+                case 4:
+                    _b.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_1 = _b.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -110,17 +108,89 @@ function addBranchLabels(yamlArray, comp, octokit, // I don't know what the spec
 issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            if (yamlArray) { // If the array exists
-                console.log(octokit.constructor.name);
+            if (yamlArray) {
+                // If the array exists
                 yamlArray.forEach(function (element) {
-                    for (var label in element) { // It'll be an array of objects so iterate through that
-                        if (element[label].includes(comp)) { // If the attribute label equals comp string
-                            octokit.issues.addLabels({ issue_number: issue_number, owner: owner, repo: repo, labels: [label] }); // Add labels
-                        }
+                    var _loop_1 = function (label) {
+                        // It'll be an array of objects so iterate through that
+                        element[label].forEach(function (pattern) {
+                            var mm = new minimatch_1.Minimatch(pattern);
+                            if (mm.match(comp)) {
+                                octokit.issues.addLabels({
+                                    issue_number: issue_number,
+                                    owner: owner,
+                                    repo: repo,
+                                    labels: [label],
+                                }); // Add labels
+                            }
+                        });
+                    };
+                    // Iterate through it
+                    for (var label in element) {
+                        _loop_1(label);
                     }
                 });
             }
             return [2 /*return*/];
+        });
+    });
+}
+function addFileLabels(config, files, octokit, issue_number, owner, repo) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (config) {
+                config.forEach(function (element) {
+                    var _loop_2 = function (label) {
+                        element[label].forEach(function (pattern) {
+                            var mm = new minimatch_1.Minimatch(pattern);
+                            files.forEach(function (file) {
+                                console.table({
+                                    file: file,
+                                    pattern: pattern,
+                                    label: label,
+                                });
+                                if (mm.match(file)) {
+                                    octokit.issues.addLabels({
+                                        issue_number: issue_number,
+                                        owner: owner,
+                                        repo: repo,
+                                        labels: [label],
+                                    }); // Add labels
+                                }
+                            });
+                        });
+                    };
+                    for (var label in element) {
+                        _loop_2(label);
+                    }
+                });
+            }
+            return [2 /*return*/];
+        });
+    });
+}
+function getChangedFiles(client, prNumber, owner, repo) {
+    return __awaiter(this, void 0, void 0, function () {
+        var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    listFilesOptions = client.pulls.listFiles.endpoint.merge({
+                        owner: owner,
+                        repo: repo,
+                        pull_number: prNumber,
+                    });
+                    return [4 /*yield*/, client.paginate(listFilesOptions)];
+                case 1:
+                    listFilesResponse = _a.sent();
+                    changedFiles = listFilesResponse.map(function (f) { return f.filename; });
+                    core.debug("found changed files:");
+                    for (_i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
+                        file = changedFiles_1[_i];
+                        core.debug("  " + file);
+                    }
+                    return [2 /*return*/, changedFiles];
+            }
         });
     });
 }
