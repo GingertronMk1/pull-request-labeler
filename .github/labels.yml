@@ -14,5 +14,5 @@ files:
   - gitstar:
     - .git*
   - dot-github:
-    - .github
+    - .github/**/*
 

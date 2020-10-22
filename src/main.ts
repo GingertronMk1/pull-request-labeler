@@ -94,7 +94,6 @@ async function addFileLabels(
             console.table({
               file: file,
               pattern: pattern,
-              element: element,
               label: label
             });
 

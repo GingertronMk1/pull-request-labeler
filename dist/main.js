@@ -154,7 +154,6 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
                                 console.table({
                                     file: file,
                                     pattern: pattern,
-                                    element: element,
                                     label: label
                                 });
                                 if (mm.match(file)) {
