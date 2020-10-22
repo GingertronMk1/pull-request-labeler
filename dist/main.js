@@ -88,7 +88,7 @@ function run() {
                     return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
                     _b.sent();
-                    return [4 /*yield*/, getChangedFiles(octokit, issue_number)];
+                    return [4 /*yield*/, getChangedFiles(octokit, issue_number, owner, repo)];
                 case 3:
                     files = _b.sent();
                     console.log(files);
@@ -139,15 +139,15 @@ issue_number, owner, repo) {
         });
     });
 }
-function getChangedFiles(client, prNumber) {
+function getChangedFiles(client, prNumber, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     listFilesOptions = client.pulls.listFiles.endpoint.merge({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
+                        owner: owner,
+                        repo: repo,
                         pull_number: prNumber
                     });
                     return [4 /*yield*/, client.paginate(listFilesOptions)];

@@ -31,7 +31,7 @@ async function run() {
     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
 
-    const files = await getChangedFiles(octokit, issue_number);
+    const files = await getChangedFiles(octokit, issue_number, owner, repo);
     console.log(files);
 
     if (config.files) {
@@ -77,11 +77,13 @@ async function addBranchLabels(
 
 async function getChangedFiles(
   client: any,
-  prNumber: number
+  prNumber: number,
+  owner: string,
+  repo: string
 ): Promise<string[]> {
   const listFilesOptions = client.pulls.listFiles.endpoint.merge({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+    owner: owner,
+    repo: repo,
     pull_number: prNumber
   });
 
