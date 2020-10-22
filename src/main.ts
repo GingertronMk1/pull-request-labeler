@@ -6,15 +6,16 @@ import { Minimatch } from "minimatch";
 
 async function run() {
   try {
-    const pullRequest = github.context.payload.pull_request;
+    const context = github.context;
+    const pullRequest = context.payload.pull_request;
+    console.log(context.payload);
     if (!pullRequest) {
       throw new Error("No pull request information found");
     }
-
     const {
       issue: { number: issue_number },
       repo: { owner, repo },
-    } = github.context;
+    } = context;
     const repoToken = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", {
       required: true,
@@ -24,13 +25,8 @@ async function run() {
 
     const octokit = github.getOctokit(repoToken);
 
-    console.table(JSON.stringify(config));
     const hr = pullRequest.head.ref;
     const br = pullRequest.base.ref;
-    console.table({
-      headref: hr,
-      baseref: br,
-    });
 
     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);

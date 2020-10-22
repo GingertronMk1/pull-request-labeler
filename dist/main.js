@@ -62,42 +62,39 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var context, pullRequest, issue_number, _a, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _c.trys.push([0, 3, , 4]);
-                    pullRequest = github.context.payload.pull_request;
+                    _b.trys.push([0, 3, , 4]);
+                    context = github.context;
+                    pullRequest = context.payload.pull_request;
+                    console.log(context.payload);
                     if (!pullRequest) {
                         throw new Error("No pull request information found");
                     }
-                    _a = github.context, issue_number = _a.issue.number, _b = _a.repo, owner = _b.owner, repo = _b.repo;
+                    issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
                     repoToken = core.getInput("repo-token", { required: true });
                     configPath = core.getInput("configuration-path", {
                         required: true,
                     });
                     config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
                     octokit = github.getOctokit(repoToken);
-                    console.table(JSON.stringify(config));
                     hr = pullRequest.head.ref;
                     br = pullRequest.base.ref;
-                    console.table({
-                        headref: hr,
-                        baseref: br,
-                    });
                     return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 1:
-                    _c.sent();
+                    _b.sent();
                     return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
-                    _c.sent();
+                    _b.sent();
                     if (config.files) {
                         // this will be more difficult
                         config.files.forEach(function (element, index) { });
                     }
                     return [3 /*break*/, 4];
                 case 3:
-                    error_1 = _c.sent();
+                    error_1 = _b.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
                     return [3 /*break*/, 4];
