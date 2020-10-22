@@ -39,7 +39,6 @@ async function run() {
       owner,
       repo
     );
-
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
@@ -54,25 +53,24 @@ async function addBranchLabels(
   owner: string,
   repo: string
 ) {
-  if (yamlArray) {
-    // If the array exists
-    yamlArray.forEach((element) => {
-      // Iterate through it
-      for (const label in element) {
-        // It'll be an array of objects so iterate through that
-        element[label].forEach((pattern) => {
-          var mm = new Minimatch(pattern);
-          if (mm.match(comp)) {
-            octokit.issues.addLabels({
-              issue_number,
-              owner,
-              repo,
-              labels: [label],
-            }); // Add labels
+  if (yamlArray) {                              // If congi array exists
+    const labels: string[] = [];                // Create empty array of labels to push
+    yamlArray.forEach((element) => {            // For each object in the config...
+      for (const label in element) {            // For each attribute of the object...
+        element[label].forEach((pattern) => {   // For each item in the array that is that attribute...
+          var mm = new Minimatch(pattern);      // Make a new minimatch
+          if (mm.match(comp)) {                 // If the string matches
+            labels.push(label);                 // Add the label to push
           }
         });
       }
     });
+    return octokit.issues.addLabels({
+      issue_number,
+      owner,
+      repo,
+      labels: labels,
+    }); // Add labels
   }
 }
 
@@ -84,30 +82,27 @@ async function addFileLabels(
   owner: string,
   repo: string
 ) {
-  if (config) {
-    config.forEach((element) => {
-      for (const label in element) {
-        element[label].forEach((pattern) => {
-          var mm = new Minimatch(pattern);
-          files.forEach((file) => {
-            console.table({
-              file: file,
-              pattern: pattern,
-              label: label,
-            });
-
-            if (mm.match(file)) {
-              octokit.issues.addLabels({
-                issue_number,
-                owner,
-                repo,
-                labels: [label],
-              }); // Add labels
+  if (config) {                                 // If the config exists
+    const labels: string[] = [];                // Make an accumulator variable
+    config.forEach((element) => {               // For each element in the config
+      for (const label in element) {            // For label in config
+        element[label].forEach((pattern) => {   // Iterate through the matches associated with it
+          var mm = new Minimatch(pattern);      // Create a new minimatcher
+          files.forEach((file) => {             // For each file changed
+            if (mm.match(file)) {               // If its path matches the glob
+              labels.push(label);               // Add the label to the array to be added to the PR
             }
           });
         });
       }
     });
+
+    return octokit.issues.addLabels({
+      issue_number,
+      owner,
+      repo,
+      labels: labels,
+    }); // Add labels
   }
 }
 
