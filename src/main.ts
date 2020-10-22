@@ -90,6 +90,13 @@ async function addFileLabels(
         element[label].forEach((pattern) => {
           var mm = new Minimatch(pattern);
           files.forEach((file) => {
+
+            console.table({
+              file: file,
+              pattern: pattern,
+              element: element
+            });
+
             if(mm.match(file)) {
               octokit.issues.addLabels({
                 issue_number,

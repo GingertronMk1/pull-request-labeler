@@ -151,6 +151,11 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
                         element[label].forEach(function (pattern) {
                             var mm = new minimatch_1.Minimatch(pattern);
                             files.forEach(function (file) {
+                                console.table({
+                                    file: file,
+                                    pattern: pattern,
+                                    element: element
+                                });
                                 if (mm.match(file)) {
                                     octokit.issues.addLabels({
                                         issue_number: issue_number,
