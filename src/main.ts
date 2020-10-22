@@ -72,7 +72,7 @@ async function addBranchLabels(
       issue_number,
       owner,
       repo,
-      labels: [labels],
+      labels: labels,
     }); // Add labels
   }
 }
@@ -107,7 +107,7 @@ async function addFileLabels(
       issue_number,
       owner,
       repo,
-      labels: [labels],
+      labels: labels,
     }); // Add labels
   }
 }

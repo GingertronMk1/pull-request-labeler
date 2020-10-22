@@ -131,7 +131,7 @@ issue_number, owner, repo) {
                         issue_number: issue_number,
                         owner: owner,
                         repo: repo,
-                        labels: [labels_1],
+                        labels: labels_1,
                     })]; // Add labels
             }
             return [2 /*return*/];
@@ -166,7 +166,7 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
                         issue_number: issue_number,
                         owner: owner,
                         repo: repo,
-                        labels: [labels_2],
+                        labels: labels_2,
                     })]; // Add labels
             }
             return [2 /*return*/];
