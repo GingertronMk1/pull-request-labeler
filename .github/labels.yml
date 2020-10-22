@@ -3,6 +3,7 @@ head:
     - testing
   - enhancement:
     - testing
+    - refactor/**/*
   - glob:
     - features/**/*
 
