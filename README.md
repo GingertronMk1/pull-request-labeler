@@ -35,3 +35,9 @@ In the above case this action will apply:
     - to basebranch2 or basebranch3
 - dotgithub to any pull request:
     - in which a file in the `.github` folder or its subdirectories is changed
+    
+---
+
+For those like me who can't remember what head/base means:
+- head: the branch with the new changes you want to merge in
+- base: the branch into which those changes are being merged
