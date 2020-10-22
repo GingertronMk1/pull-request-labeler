@@ -94,7 +94,8 @@ async function addFileLabels(
             console.table({
               file: file,
               pattern: pattern,
-              element: element
+              element: element,
+              label: label
             });
 
             if(mm.match(file)) {
