@@ -62,11 +62,11 @@ var fs = __importStar(require("fs"));
 var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var context, pullRequest, issue_number, _a, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
+        var context, pullRequest, issue_number, _a, owner, repo, repoToken, configPath, config, octokit, hr, br, files, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 3, , 4]);
+                    _b.trys.push([0, 4, , 5]);
                     context = github.context;
                     pullRequest = context.payload.pull_request;
                     console.log(context.payload);
@@ -88,17 +88,21 @@ function run() {
                     return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 2:
                     _b.sent();
+                    return [4 /*yield*/, getChangedFiles(octokit, issue_number)];
+                case 3:
+                    files = _b.sent();
+                    console.log(files);
                     if (config.files) {
                         // this will be more difficult
                         config.files.forEach(function (element, index) { });
                     }
-                    return [3 /*break*/, 4];
-                case 3:
+                    return [3 /*break*/, 5];
+                case 4:
                     error_1 = _b.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -132,6 +136,31 @@ issue_number, owner, repo) {
                 });
             }
             return [2 /*return*/];
+        });
+    });
+}
+function getChangedFiles(client, prNumber) {
+    return __awaiter(this, void 0, void 0, function () {
+        var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    listFilesOptions = client.pulls.listFiles.endpoint.merge({
+                        owner: github.context.repo.owner,
+                        repo: github.context.repo.repo,
+                        pull_number: prNumber
+                    });
+                    return [4 /*yield*/, client.paginate(listFilesOptions)];
+                case 1:
+                    listFilesResponse = _a.sent();
+                    changedFiles = listFilesResponse.map(function (f) { return f.filename; });
+                    core.debug("found changed files:");
+                    for (_i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
+                        file = changedFiles_1[_i];
+                        core.debug("  " + file);
+                    }
+                    return [2 /*return*/, changedFiles];
+            }
         });
     });
 }

@@ -31,6 +31,9 @@ async function run() {
     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
 
+    const files = await getChangedFiles(octokit, issue_number);
+    console.log(files);
+
     if (config.files) {
       // this will be more difficult
       config.files.forEach((element, index) => {});
@@ -70,5 +73,28 @@ async function addBranchLabels(
     })
   }
 }
+
+
+async function getChangedFiles(
+  client: any,
+  prNumber: number
+): Promise<string[]> {
+  const listFilesOptions = client.pulls.listFiles.endpoint.merge({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: prNumber
+  });
+
+  const listFilesResponse = await client.paginate(listFilesOptions);
+  const changedFiles = listFilesResponse.map(f => f.filename);
+
+  core.debug("found changed files:");
+  for (const file of changedFiles) {
+    core.debug("  " + file);
+  }
+
+  return changedFiles;
+}
+
 
 run();
