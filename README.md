@@ -19,6 +19,10 @@ base:
     - label3:
         - basebranch2
         - basebranch3
+
+files:
+    - .github/**/*
+        - dotgithub
 ```
 
 In the above case this action will apply:
@@ -29,3 +33,5 @@ In the above case this action will apply:
     - to basebranch1 or basebranch2
 - label3 to any pull request:
     - to basebranch2 or basebranch3
+- dotgithub to any pull request:
+    - in which a file in the `.github` folder or its subdirectories is changed
