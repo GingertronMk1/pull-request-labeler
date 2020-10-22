@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import * as match from "minimatch";
+import * as minimatch from "minimatch";
 
 async function run() {
   try {
@@ -60,7 +60,7 @@ async function addBranchLabels(
       for (const label in element) {
         // It'll be an array of objects so iterate through that
         element[label].forEach((pattern) => {
-          if (match.minimatch(comp, pattern))
+          if (minimatch(comp, pattern))
             octokit.issues.addLabels({
               issue_number,
               owner,
