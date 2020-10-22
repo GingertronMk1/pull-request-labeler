@@ -69,7 +69,6 @@ function run() {
                     _b.trys.push([0, 5, , 6]);
                     context = github.context;
                     pullRequest = context.payload.pull_request;
-                    // console.log(context.payload);
                     if (!pullRequest) {
                         throw new Error("No pull request information found");
                     }
@@ -82,23 +81,18 @@ function run() {
                     octokit = github.getOctokit(repoToken);
                     hr = pullRequest.head.ref;
                     br = pullRequest.base.ref;
-                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
+                    return [4 /*yield*/, getChangedFiles(octokit, issue_number, owner, repo)];
                 case 1:
-                    _b.sent();
-                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
+                    files = _b.sent();
+                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
                 case 2:
                     _b.sent();
-                    return [4 /*yield*/, getChangedFiles(octokit, issue_number, owner, repo)];
+                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
                 case 3:
-                    files = _b.sent();
-                    console.log(files);
+                    _b.sent();
                     return [4 /*yield*/, addFileLabels(config.files, files, octokit, issue_number, owner, repo)];
                 case 4:
                     _b.sent();
-                    if (config.files) {
-                        // this will be more difficult
-                        config.files.forEach(function (element, index) { });
-                    }
                     return [3 /*break*/, 6];
                 case 5:
                     error_1 = _b.sent();
@@ -129,7 +123,6 @@ issue_number, owner, repo) {
                                     labels: [label],
                                 }); // Add labels
                             }
-                            ;
                         });
                     };
                     // Iterate through it
@@ -154,7 +147,7 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
                                 console.table({
                                     file: file,
                                     pattern: pattern,
-                                    label: label
+                                    label: label,
                                 });
                                 if (mm.match(file)) {
                                     octokit.issues.addLabels({
@@ -185,7 +178,7 @@ function getChangedFiles(client, prNumber, owner, repo) {
                     listFilesOptions = client.pulls.listFiles.endpoint.merge({
                         owner: owner,
                         repo: repo,
-                        pull_number: prNumber
+                        pull_number: prNumber,
                     });
                     return [4 /*yield*/, client.paginate(listFilesOptions)];
                 case 1:

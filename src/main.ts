@@ -8,7 +8,6 @@ async function run() {
   try {
     const context = github.context;
     const pullRequest = context.payload.pull_request;
-    // console.log(context.payload);
     if (!pullRequest) {
       throw new Error("No pull request information found");
     }
@@ -27,19 +26,20 @@ async function run() {
 
     const hr = pullRequest.head.ref;
     const br = pullRequest.base.ref;
+    const files = await getChangedFiles(octokit, issue_number, owner, repo);
 
     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
 
+    await addFileLabels(
+      config.files,
+      files,
+      octokit,
+      issue_number,
+      owner,
+      repo
+    );
 
-    const files = await getChangedFiles(octokit, issue_number, owner, repo);
-    console.log(files);
-    await addFileLabels(config.files, files, octokit, issue_number, owner, repo);
-
-    if (config.files) {
-      // this will be more difficult
-      config.files.forEach((element, index) => {});
-    }
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
@@ -62,17 +62,17 @@ async function addBranchLabels(
         // It'll be an array of objects so iterate through that
         element[label].forEach((pattern) => {
           var mm = new Minimatch(pattern);
-          if(mm.match(comp)) {
+          if (mm.match(comp)) {
             octokit.issues.addLabels({
               issue_number,
               owner,
               repo,
               labels: [label],
             }); // Add labels
-          };
-        })
+          }
+        });
       }
-    })
+    });
   }
 }
 
@@ -84,20 +84,19 @@ async function addFileLabels(
   owner: string,
   repo: string
 ) {
-  if(config) {
+  if (config) {
     config.forEach((element) => {
-      for(const label in element) {
+      for (const label in element) {
         element[label].forEach((pattern) => {
           var mm = new Minimatch(pattern);
           files.forEach((file) => {
-
             console.table({
               file: file,
               pattern: pattern,
-              label: label
+              label: label,
             });
 
-            if(mm.match(file)) {
+            if (mm.match(file)) {
               octokit.issues.addLabels({
                 issue_number,
                 owner,
@@ -105,10 +104,10 @@ async function addFileLabels(
                 labels: [label],
               }); // Add labels
             }
-          })
-        })
+          });
+        });
       }
-    })
+    });
   }
 }
 
@@ -121,11 +120,11 @@ async function getChangedFiles(
   const listFilesOptions = client.pulls.listFiles.endpoint.merge({
     owner: owner,
     repo: repo,
-    pull_number: prNumber
+    pull_number: prNumber,
   });
 
   const listFilesResponse = await client.paginate(listFilesOptions);
-  const changedFiles = listFilesResponse.map(f => f.filename);
+  const changedFiles = listFilesResponse.map((f) => f.filename);
 
   core.debug("found changed files:");
   for (const file of changedFiles) {
@@ -134,6 +133,5 @@ async function getChangedFiles(
 
   return changedFiles;
 }
-
 
 run();
