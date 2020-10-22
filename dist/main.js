@@ -69,7 +69,7 @@ function run() {
                     _b.trys.push([0, 4, , 5]);
                     context = github.context;
                     pullRequest = context.payload.pull_request;
-                    console.log(context.payload);
+                    // console.log(context.payload);
                     if (!pullRequest) {
                         throw new Error("No pull request information found");
                     }

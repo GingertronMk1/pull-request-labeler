@@ -8,7 +8,7 @@ async function run() {
   try {
     const context = github.context;
     const pullRequest = context.payload.pull_request;
-    console.log(context.payload);
+    // console.log(context.payload);
     if (!pullRequest) {
       throw new Error("No pull request information found");
     }
