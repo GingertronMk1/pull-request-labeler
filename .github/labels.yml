@@ -3,7 +3,16 @@ head:
     - testing
   - enhancement:
     - testing
+  - glob:
+    - features/**/*
 
 base:
   - master:
     - master
+
+files:
+  - gitstar:
+    - .git*
+  - dot-github:
+    - .github/**/*
+
