@@ -9,3 +9,10 @@ head:
 base:
   - master:
     - master
+
+files:
+  - gitstar:
+    - .git*
+  - dot-github:
+    - .github
+

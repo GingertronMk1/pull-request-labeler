@@ -66,7 +66,7 @@ function run() {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 4, , 5]);
+                    _b.trys.push([0, 5, , 6]);
                     context = github.context;
                     pullRequest = context.payload.pull_request;
                     // console.log(context.payload);
@@ -92,17 +92,20 @@ function run() {
                 case 3:
                     files = _b.sent();
                     console.log(files);
+                    return [4 /*yield*/, addFileLabels(config.files, files, octokit, issue_number, owner, repo)];
+                case 4:
+                    _b.sent();
                     if (config.files) {
                         // this will be more difficult
                         config.files.forEach(function (element, index) { });
                     }
-                    return [3 /*break*/, 5];
-                case 4:
+                    return [3 /*break*/, 6];
+                case 5:
                     error_1 = _b.sent();
                     core.error(error_1);
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -132,6 +135,35 @@ issue_number, owner, repo) {
                     // Iterate through it
                     for (var label in element) {
                         _loop_1(label);
+                    }
+                });
+            }
+            return [2 /*return*/];
+        });
+    });
+}
+function addFileLabels(config, files, octokit, issue_number, owner, repo) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (config) {
+                config.forEach(function (element) {
+                    var _loop_2 = function (label) {
+                        element[label].forEach(function (pattern) {
+                            var mm = new minimatch_1.Minimatch(pattern);
+                            files.forEach(function (file) {
+                                if (mm.match(file)) {
+                                    octokit.issues.addLabels({
+                                        issue_number: issue_number,
+                                        owner: owner,
+                                        repo: repo,
+                                        labels: [label],
+                                    }); // Add labels
+                                }
+                            });
+                        });
+                    };
+                    for (var label in element) {
+                        _loop_2(label);
                     }
                 });
             }

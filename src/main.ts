@@ -31,8 +31,10 @@ async function run() {
     await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
     await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
 
+
     const files = await getChangedFiles(octokit, issue_number, owner, repo);
     console.log(files);
+    await addFileLabels(config.files, files, octokit, issue_number, owner, repo);
 
     if (config.files) {
       // this will be more difficult
@@ -74,6 +76,34 @@ async function addBranchLabels(
   }
 }
 
+async function addFileLabels(
+  config: object[],
+  files: string[],
+  octokit: any,
+  issue_number: number,
+  owner: string,
+  repo: string
+) {
+  if(config) {
+    config.forEach((element) => {
+      for(const label in element) {
+        element[label].forEach((pattern) => {
+          var mm = new Minimatch(pattern);
+          files.forEach((file) => {
+            if(mm.match(file)) {
+              octokit.issues.addLabels({
+                issue_number,
+                owner,
+                repo,
+                labels: [label],
+              }); // Add labels
+            }
+          })
+        })
+      }
+    })
+  }
+}
 
 async function getChangedFiles(
   client: any,
