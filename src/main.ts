@@ -68,7 +68,7 @@ async function addBranchLabels(
         });
       }
     });
-    octokit.issues.addLabels({
+    return octokit.issues.addLabels({
       issue_number,
       owner,
       repo,
@@ -103,7 +103,7 @@ async function addFileLabels(
       }
     });
 
-    octokit.issues.addLabels({
+    return octokit.issues.addLabels({
       issue_number,
       owner,
       repo,

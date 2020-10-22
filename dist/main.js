@@ -127,12 +127,12 @@ issue_number, owner, repo) {
                         _loop_1(label);
                     }
                 });
-                octokit.issues.addLabels({
-                    issue_number: issue_number,
-                    owner: owner,
-                    repo: repo,
-                    labels: [labels_1],
-                }); // Add labels
+                return [2 /*return*/, octokit.issues.addLabels({
+                        issue_number: issue_number,
+                        owner: owner,
+                        repo: repo,
+                        labels: [labels_1],
+                    })]; // Add labels
             }
             return [2 /*return*/];
         });
@@ -162,12 +162,12 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
                         _loop_2(label);
                     }
                 });
-                octokit.issues.addLabels({
-                    issue_number: issue_number,
-                    owner: owner,
-                    repo: repo,
-                    labels: [labels_2],
-                }); // Add labels
+                return [2 /*return*/, octokit.issues.addLabels({
+                        issue_number: issue_number,
+                        owner: owner,
+                        repo: repo,
+                        labels: [labels_2],
+                    })]; // Add labels
             }
             return [2 /*return*/];
         });
