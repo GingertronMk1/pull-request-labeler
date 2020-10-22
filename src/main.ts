@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import * as minimatch from "minimatch";
+import { minimatch } from "minimatch";
 
 async function run() {
   try {

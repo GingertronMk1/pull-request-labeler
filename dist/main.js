@@ -59,7 +59,7 @@ var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
 var yaml = __importStar(require("js-yaml"));
 var fs = __importStar(require("fs"));
-var minimatch = __importStar(require("minimatch"));
+var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
         var pullRequest, _a, issue_number, _b, owner, repo, repoToken, configPath, config, octokit, hr, br, error_1;
@@ -116,7 +116,7 @@ issue_number, owner, repo) {
                     var _loop_1 = function (label) {
                         // It'll be an array of objects so iterate through that
                         element[label].forEach(function (pattern) {
-                            if (minimatch(comp, pattern))
+                            if (minimatch_1.minimatch(comp, pattern))
                                 octokit.issues.addLabels({
                                     issue_number: issue_number,
                                     owner: owner,
