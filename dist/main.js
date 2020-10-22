@@ -107,8 +107,10 @@ function run() {
 function addBranchLabels(yamlArray, comp, octokit, // I don't know what the specific type of an octokit is - apparently not an object
 issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
+        var labels_1;
         return __generator(this, function (_a) {
             if (yamlArray) {
+                labels_1 = [];
                 // If the array exists
                 yamlArray.forEach(function (element) {
                     var _loop_1 = function (label) {
@@ -116,12 +118,7 @@ issue_number, owner, repo) {
                         element[label].forEach(function (pattern) {
                             var mm = new minimatch_1.Minimatch(pattern);
                             if (mm.match(comp)) {
-                                octokit.issues.addLabels({
-                                    issue_number: issue_number,
-                                    owner: owner,
-                                    repo: repo,
-                                    labels: [label],
-                                }); // Add labels
+                                labels_1.push(label);
                             }
                         });
                     };
@@ -130,6 +127,12 @@ issue_number, owner, repo) {
                         _loop_1(label);
                     }
                 });
+                octokit.issues.addLabels({
+                    issue_number: issue_number,
+                    owner: owner,
+                    repo: repo,
+                    labels: [labels_1],
+                }); // Add labels
             }
             return [2 /*return*/];
         });
@@ -137,33 +140,34 @@ issue_number, owner, repo) {
 }
 function addFileLabels(config, files, octokit, issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
+        var labels_2;
         return __generator(this, function (_a) {
             if (config) {
+                labels_2 = [];
+                // If the config section exists
                 config.forEach(function (element) {
                     var _loop_2 = function (label) {
+                        // For
                         element[label].forEach(function (pattern) {
                             var mm = new minimatch_1.Minimatch(pattern);
                             files.forEach(function (file) {
-                                console.table({
-                                    file: file,
-                                    pattern: pattern,
-                                    label: label,
-                                });
                                 if (mm.match(file)) {
-                                    octokit.issues.addLabels({
-                                        issue_number: issue_number,
-                                        owner: owner,
-                                        repo: repo,
-                                        labels: [label],
-                                    }); // Add labels
+                                    labels_2.push(label);
                                 }
                             });
                         });
                     };
+                    // Iterate through it
                     for (var label in element) {
                         _loop_2(label);
                     }
                 });
+                octokit.issues.addLabels({
+                    issue_number: issue_number,
+                    owner: owner,
+                    repo: repo,
+                    labels: [labels_2],
+                }); // Add labels
             }
             return [2 /*return*/];
         });

@@ -39,7 +39,6 @@ async function run() {
       owner,
       repo
     );
-
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
@@ -55,6 +54,7 @@ async function addBranchLabels(
   repo: string
 ) {
   if (yamlArray) {
+    const labels: string[] = [];
     // If the array exists
     yamlArray.forEach((element) => {
       // Iterate through it
@@ -63,16 +63,17 @@ async function addBranchLabels(
         element[label].forEach((pattern) => {
           var mm = new Minimatch(pattern);
           if (mm.match(comp)) {
-            octokit.issues.addLabels({
-              issue_number,
-              owner,
-              repo,
-              labels: [label],
-            }); // Add labels
+            labels.push(label);
           }
         });
       }
     });
+    octokit.issues.addLabels({
+      issue_number,
+      owner,
+      repo,
+      labels: [labels],
+    }); // Add labels
   }
 }
 
@@ -85,29 +86,29 @@ async function addFileLabels(
   repo: string
 ) {
   if (config) {
+    const labels: string[] = [];
+    // If the config section exists
     config.forEach((element) => {
+      // Iterate through it
       for (const label in element) {
+        // For
         element[label].forEach((pattern) => {
           var mm = new Minimatch(pattern);
           files.forEach((file) => {
-            console.table({
-              file: file,
-              pattern: pattern,
-              label: label,
-            });
-
             if (mm.match(file)) {
-              octokit.issues.addLabels({
-                issue_number,
-                owner,
-                repo,
-                labels: [label],
-              }); // Add labels
+              labels.push(label);
             }
           });
         });
       }
     });
+
+    octokit.issues.addLabels({
+      issue_number,
+      owner,
+      repo,
+      labels: [labels],
+    }); // Add labels
   }
 }
 
