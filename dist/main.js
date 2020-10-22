@@ -116,13 +116,16 @@ issue_number, owner, repo) {
                     var _loop_1 = function (label) {
                         // It'll be an array of objects so iterate through that
                         element[label].forEach(function (pattern) {
-                            if (minimatch_1.minimatch(comp, pattern))
+                            var mm = new minimatch_1.Minimatch(pattern);
+                            if (mm.match(comp)) {
                                 octokit.issues.addLabels({
                                     issue_number: issue_number,
                                     owner: owner,
                                     repo: repo,
                                     labels: [label],
                                 }); // Add labels
+                            }
+                            ;
                         });
                     };
                     // Iterate through it

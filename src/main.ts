@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import { minimatch } from "minimatch";
+import { Minimatch } from "minimatch";
 
 async function run() {
   try {
@@ -60,16 +60,18 @@ async function addBranchLabels(
       for (const label in element) {
         // It'll be an array of objects so iterate through that
         element[label].forEach((pattern) => {
-          if (minimatch(comp, pattern))
+          var mm = new Minimatch(pattern);
+          if(mm.match(comp)) {
             octokit.issues.addLabels({
               issue_number,
               owner,
               repo,
               labels: [label],
             }); // Add labels
-        });
+          };
+        })
       }
-    });
+    })
   }
 }
 
