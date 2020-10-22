@@ -3,6 +3,8 @@ head:
     - testing
   - enhancement:
     - testing
+  - glob:
+    - features/**/*
 
 base:
   - master:
