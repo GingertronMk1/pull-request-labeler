@@ -53,17 +53,14 @@ async function addBranchLabels(
   owner: string,
   repo: string
 ) {
-  if (yamlArray) {
-    const labels: string[] = [];
-    // If the array exists
-    yamlArray.forEach((element) => {
-      // Iterate through it
-      for (const label in element) {
-        // It'll be an array of objects so iterate through that
-        element[label].forEach((pattern) => {
-          var mm = new Minimatch(pattern);
-          if (mm.match(comp)) {
-            labels.push(label);
+  if (yamlArray) {                              // If congi array exists
+    const labels: string[] = [];                // Create empty array of labels to push
+    yamlArray.forEach((element) => {            // For each object in the config...
+      for (const label in element) {            // For each attribute of the object...
+        element[label].forEach((pattern) => {   // For each item in the array that is that attribute...
+          var mm = new Minimatch(pattern);      // Make a new minimatch
+          if (mm.match(comp)) {                 // If the string matches
+            labels.push(label);                 // Add the label to push
           }
         });
       }
@@ -85,18 +82,15 @@ async function addFileLabels(
   owner: string,
   repo: string
 ) {
-  if (config) {
-    const labels: string[] = [];
-    // If the config section exists
-    config.forEach((element) => {
-      // Iterate through it
-      for (const label in element) {
-        // For
-        element[label].forEach((pattern) => {
-          var mm = new Minimatch(pattern);
-          files.forEach((file) => {
-            if (mm.match(file)) {
-              labels.push(label);
+  if (config) {                                 // If the config exists
+    const labels: string[] = [];                // Make an accumulator variable
+    config.forEach((element) => {               // For each element in the config
+      for (const label in element) {            // For label in config
+        element[label].forEach((pattern) => {   // Iterate through the matches associated with it
+          var mm = new Minimatch(pattern);      // Create a new minimatcher
+          files.forEach((file) => {             // For each file changed
+            if (mm.match(file)) {               // If its path matches the glob
+              labels.push(label);               // Add the label to the array to be added to the PR
             }
           });
         });

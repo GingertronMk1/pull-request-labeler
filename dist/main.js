@@ -109,20 +109,17 @@ issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         var labels_1;
         return __generator(this, function (_a) {
-            if (yamlArray) {
+            if (yamlArray) { // If congi array exists
                 labels_1 = [];
-                // If the array exists
                 yamlArray.forEach(function (element) {
                     var _loop_1 = function (label) {
-                        // It'll be an array of objects so iterate through that
                         element[label].forEach(function (pattern) {
-                            var mm = new minimatch_1.Minimatch(pattern);
-                            if (mm.match(comp)) {
-                                labels_1.push(label);
+                            var mm = new minimatch_1.Minimatch(pattern); // Make a new minimatch
+                            if (mm.match(comp)) { // If the string matches
+                                labels_1.push(label); // Add the label to push
                             }
                         });
                     };
-                    // Iterate through it
                     for (var label in element) {
                         _loop_1(label);
                     }
@@ -142,22 +139,19 @@ function addFileLabels(config, files, octokit, issue_number, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
         var labels_2;
         return __generator(this, function (_a) {
-            if (config) {
+            if (config) { // If the config exists
                 labels_2 = [];
-                // If the config section exists
                 config.forEach(function (element) {
                     var _loop_2 = function (label) {
-                        // For
                         element[label].forEach(function (pattern) {
-                            var mm = new minimatch_1.Minimatch(pattern);
+                            var mm = new minimatch_1.Minimatch(pattern); // Create a new minimatcher
                             files.forEach(function (file) {
-                                if (mm.match(file)) {
-                                    labels_2.push(label);
+                                if (mm.match(file)) { // If its path matches the glob
+                                    labels_2.push(label); // Add the label to the array to be added to the PR
                                 }
                             });
                         });
                     };
-                    // Iterate through it
                     for (var label in element) {
                         _loop_2(label);
                     }
