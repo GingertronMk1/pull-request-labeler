@@ -28,8 +28,22 @@ async function run() {
     const br = pullRequest.base.ref;
     const files = await getChangedFiles(octokit, issue_number, owner, repo);
 
-    await addBranchLabels(config.head, hr, octokit, issue_number, owner, repo);
-    await addBranchLabels(config.base, br, octokit, issue_number, owner, repo);
+    await addBranchLabels(
+      config.head,
+      hr,
+      octokit,
+      issue_number,
+      owner,
+      repo
+    );
+      await addBranchLabels(
+      config.base,
+      br,
+      octokit,
+      issue_number,
+      owner,
+      repo
+    );
 
     await addFileLabels(
       config.files,
